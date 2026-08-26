@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/links';
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import { images, imageAlt } from '../data/images';
@@ -104,11 +105,11 @@ const work = [
 
     <div class="mt-14 border-t border-line pt-8">
       <p class="max-w-2xl text-sm leading-relaxed text-steel">
-        Se et før/etter-eksempel på <a href="/#for-etter" class="underline underline-offset-2 transition-colors hover:text-copper">forsiden</a>,
+        Se et før/etter-eksempel på <a href={`${withBase("/")}#for-etter`} class="underline underline-offset-2 transition-colors hover:text-copper">forsiden</a>,
         eller send oss en forespørsel med bilder av bilen din — så vurderer vi
         hva den trenger.
       </p>
-      <a href="/bestill-time#overslag" class="btn-primary mt-6">Send en forespørsel</a>
+      <a href={`${withBase("/bestill-time")}#overslag`} class="btn-primary mt-6">Send en forespørsel</a>
     </div>
   </section>
 </Base>

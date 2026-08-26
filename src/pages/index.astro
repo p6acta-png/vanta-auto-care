@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/links';
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import { images, imageAlt } from '../data/images';
@@ -100,8 +101,8 @@ const workSteps = [
             begynner.
           </p>
           <div class="mt-9 flex flex-wrap gap-3">
-            <a href="/bestill-time" class="btn-primary-dark">Bestill time</a>
-            <a href="/bestill-time#overslag" class="btn-secondary-dark">
+            <a href={withBase("/bestill-time")} class="btn-primary-dark">Bestill time</a>
+            <a href={`${withBase("/bestill-time")}#overslag`} class="btn-secondary-dark">
               Få et prisoverslag
             </a>
           </div>
@@ -149,7 +150,7 @@ const workSteps = [
         <p class="micro">Tjenester</p>
         <h2 class="display-xl mt-3">Det vi gjør — og hva det koster</h2>
       </div>
-      <a href="/tjenester" class="link-plain lg:mb-2">Se alle tjenester</a>
+      <a href={withBase("/tjenester")} class="link-plain lg:mb-2">Se alle tjenester</a>
     </div>
     <ServiceIndex items={services} />
   </section>
@@ -241,8 +242,8 @@ const workSteps = [
           <p class="border-b border-line" aria-hidden="true"></p>
         </dl>
         <div class="mt-8 flex flex-wrap items-center gap-5">
-          <a href="/tjenester#keramisk-coating" class="btn-primary">Om coating</a>
-          <a href="/om-oss" class="link-plain">Om oss</a>
+          <a href={`${withBase("/tjenester")}#keramisk-coating`} class="btn-primary">Om coating</a>
+          <a href={withBase("/om-oss")} class="link-plain">Om oss</a>
         </div>
       </div>
     </div>
@@ -260,8 +261,8 @@ const workSteps = [
             vurderes alltid før vi setter pris — du godkjenner før vi begynner.
           </p>
           <div class="mt-7 flex flex-wrap items-center gap-5">
-            <a href="/priser" class="btn-primary">Se full prisliste</a>
-            <a href="/bestill-time#overslag" class="link-plain">Få et prisoverslag</a>
+            <a href={withBase("/priser")} class="btn-primary">Se full prisliste</a>
+            <a href={`${withBase("/bestill-time")}#overslag`} class="link-plain">Få et prisoverslag</a>
           </div>
           <p class="mt-6 max-w-md text-xs leading-relaxed text-steel">
             {priceDisclaimer}
@@ -298,7 +299,7 @@ const workSteps = [
           </table>
           <p class="mt-3 text-xs text-steel">
             Eksempelpriser i kroner. Full oversikt — med varebil — finner du på
-            <a href="/priser" class="underline underline-offset-2 transition-colors hover:text-copper">prissiden</a>.
+            <a href={withBase("/priser")} class="underline underline-offset-2 transition-colors hover:text-copper">prissiden</a>.
           </p>
         </div>
       </div>
@@ -342,7 +343,7 @@ const workSteps = [
         <p class="micro">Prosjekter</p>
         <h2 class="display-xl mt-3">Eksempler fra verkstedet</h2>
       </div>
-      <a href="/prosjekter" class="link-plain lg:mb-2">Se prosjekter</a>
+      <a href={withBase("/prosjekter")} class="link-plain lg:mb-2">Se prosjekter</a>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-12">
@@ -391,7 +392,7 @@ const workSteps = [
         Klar til å se hva bilen din trenger?
       </h2>
       <div class="flex flex-wrap items-center gap-6">
-        <a href="/bestill-time" class="btn-primary-dark">Bestill time</a>
+        <a href={withBase("/bestill-time")} class="btn-primary-dark">Bestill time</a>
         <a href={site.phone.href} class="link-plain-dark">
           {site.phone.display}
         </a>

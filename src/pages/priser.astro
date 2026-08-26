@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/links';
 import Base from '../layouts/Base.astro';
 import PriceTable from '../components/PriceTable.astro';
 import { demoPricingNote } from '../data/site';
@@ -108,8 +109,8 @@ const priceFactors = [
           forplikter deg ikke til noe.
         </p>
         <div class="mt-6 flex flex-wrap gap-3">
-          <a href="/bestill-time#overslag" class="btn-primary">Få et prisoverslag</a>
-          <a href="/faq" class="btn-secondary">Vanlige spørsmål</a>
+          <a href={`${withBase("/bestill-time")}#overslag`} class="btn-primary">Få et prisoverslag</a>
+          <a href={withBase("/faq")} class="btn-secondary">Vanlige spørsmål</a>
         </div>
       </div>
     </div>

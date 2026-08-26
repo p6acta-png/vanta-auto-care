@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/links';
 import { nav, site } from '../data/site';
 import { Menu, X, Phone } from '@lucide/astro';
 
@@ -14,7 +15,7 @@ const isHome = home;
 
 <header id="site-header" data-solid={isHome ? 'false' : 'true'}>
   <div class="wrap flex h-16 items-center justify-between gap-6">
-    <a href="/" class="flex flex-col leading-none" aria-label="{site.name} — hjem">
+    <a href={withBase("/")} class="flex flex-col leading-none" aria-label="{site.name} — hjem">
       <span class="font-display text-[23px] font-semibold tracking-[0.09em]">
         VANTA<span class="text-copper">.</span>
       </span>
@@ -27,7 +28,7 @@ const isHome = home;
       {
         nav.map((item) => (
           <a
-            href={item.href}
+            href={withBase(item.href)}
             class:list={[
               'text-[13px] font-medium transition-colors hover:text-copper',
               !isHome && pagePath.startsWith(item.href) ? 'text-copper' : '',
@@ -47,7 +48,7 @@ const isHome = home;
         <Phone class="h-3.5 w-3.5" aria-hidden="true" />
         {site.phone.display}
       </a>
-      <a href="/bestill-time" class="btn btn-cta !px-5 !py-2.5">
+      <a href={withBase("/bestill-time")} class="btn btn-cta !px-5 !py-2.5">
         Bestill time
       </a>
     </div>
@@ -75,7 +76,7 @@ const isHome = home;
       {
         nav.map((item) => (
           <a
-            href={item.href}
+            href={withBase(item.href)}
             class="border-b border-paper/10 py-4 font-display text-3xl font-medium tracking-wide text-paper transition-colors hover:text-copper"
           >
             {item.label}
@@ -85,8 +86,8 @@ const isHome = home;
     </nav>
 
     <div class="flex flex-col gap-3 py-8">
-      <a href="/bestill-time" class="btn-primary-dark w-full">Bestill time</a>
-      <a href="/bestill-time#overslag" class="btn-secondary-dark w-full">
+      <a href={withBase("/bestill-time")} class="btn-primary-dark w-full">Bestill time</a>
+      <a href={`${withBase("/bestill-time")}#overslag`} class="btn-secondary-dark w-full">
         Få et prisoverslag
       </a>
     </div>

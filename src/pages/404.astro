@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/links';
 import Base from '../layouts/Base.astro';
 import { ArrowRight } from '@lucide/astro';
 ---
@@ -17,11 +18,11 @@ import { ArrowRight } from '@lucide/astro';
       å komme videre:
     </p>
     <div class="mt-8 flex flex-wrap gap-3">
-      <a href="/" class="btn-primary">
+      <a href={withBase("/")} class="btn-primary">
         Til forsiden
         <ArrowRight class="h-4 w-4" aria-hidden="true" />
       </a>
-      <a href="/bestill-time" class="btn-secondary">Bestill time</a>
+      <a href={withBase("/bestill-time")} class="btn-secondary">Bestill time</a>
     </div>
   </section>
 </Base>

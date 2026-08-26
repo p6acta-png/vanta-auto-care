@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/links';
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import { categories, services, demoPricingNote } from '../data/site';
@@ -112,11 +113,11 @@ const flagships = ['keramisk-coating', 'ppf'];
                               Bestill time
                             </a>
                           ) : (
-                            <a href="/bestill-time#overslag" class="btn-primary">
+                            <a href={`${withBase("/bestill-time")}#overslag`} class="btn-primary">
                               Få et prisoverslag
                             </a>
                           )}
-                          <a href="/priser" class="link-plain">Se priser</a>
+                          <a href={withBase("/priser")} class="link-plain">Se priser</a>
                         </div>
                       </div>
                     </div>
@@ -141,7 +142,7 @@ const flagships = ['keramisk-coating', 'ppf'];
           og svarer med et konkret forslag — uten forpliktelser.
         </p>
       </div>
-      <a href="/bestill-time#overslag" class="btn-primary-dark shrink-0">
+      <a href={`${withBase("/bestill-time")}#overslag`} class="btn-primary-dark shrink-0">
         Send en forespørsel
       </a>
     </div>
