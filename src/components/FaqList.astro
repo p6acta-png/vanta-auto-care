@@ -1,0 +1,29 @@
+---
+import { Plus } from '@lucide/astro';
+
+interface Props {
+  items: { q: string; a: string }[];
+  className?: string;
+}
+
+const { items, className } = Astro.props;
+---
+
+<div class={className}>
+  {
+    items.map((item) => (
+      <details class="group border-b border-line">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left text-base font-semibold text-ink transition-colors hover:text-copper [&::-webkit-details-marker]:hidden">
+          <span>{item.q}</span>
+          <Plus
+            class="h-5 w-5 shrink-0 text-copper transition-transform duration-200 group-open:rotate-45"
+            aria-hidden="true"
+          />
+        </summary>
+        <p class="max-w-2xl pb-6 text-[15px] leading-relaxed text-steel">
+          {item.a}
+        </p>
+      </details>
+    ))
+  }
+</div>

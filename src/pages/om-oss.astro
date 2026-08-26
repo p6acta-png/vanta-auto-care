@@ -1,0 +1,159 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { images, imageAlt } from '../data/images';
+import { site, demoPricingNote } from '../data/site';
+import { Phone } from '@lucide/astro';
+
+const principles = [
+  {
+    title: 'Forberedelse først',
+    text: 'Ingen polering før lakken er vasket, renset og målt. Det er forberedelsen som avgjør resultatet.',
+  },
+  {
+    title: 'Ærlig vurdering',
+    text: 'Vi sier fra når en behandling ikke er nødvendig. Ingen oppselging av arbeid bilen din ikke trenger.',
+  },
+  {
+    title: 'Ordentlig håndtering',
+    text: 'Bilen behandles som om den var vår egen: rene kluter, riktig verktøy og varsomhet rundt lakk og interiør.',
+  },
+  {
+    title: 'Tydelig kommunikasjon',
+    text: 'Du får pris og tidspunkt på forhånd, og vi svarer innen én arbeidsdag.',
+  },
+];
+---
+
+<Base
+  title="Om oss — uavhengig bilpleieverksted i Oslo | VANTA Auto Care"
+  description="VANTA Auto Care er et lite bilpleieverksted i Nydalen, Oslo. Vi jobber grundig med vask, rens, polering og beskyttelse — med tydelige priser og ærlige vurderinger."
+>
+  <section class="wrap py-16 sm:py-24">
+    <p class="label-rule">Om oss</p>
+    <h1 class="h-display mt-4 max-w-3xl text-[clamp(2.4rem,5.5vw,4rem)]">
+      Et lite verksted i Nydalen
+    </h1>
+    <div class="mt-10 grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
+      <div class="max-w-2xl space-y-5 text-[15px] leading-relaxed text-steel">
+        <p>
+          VANTA Auto Care er et uavhengig bilpleieverksted i Oslo. Vi driver
+          med det de fleste kaller «ordentlig bilpleie»: vask for hånd,
+          innvendig rens, maskinpolering og beskyttelse av lakken. Verkstedet
+          er lite med vilje — vi tar imot noen få biler om dagen, slik at
+          hver bil får den tiden den trenger.
+        </p>
+        <p>
+          Det meste av arbeidet gjøres innendørs, i et verksted med kontrollert
+          lys og temperatur. Det høres kanskje ikke ut som mye, men det er
+          forskjellen på en lakk som ser bra ut i solnedgang og en lakk som
+          faktisk er jevn.
+        </p>
+        <p>
+          Vi bruker forbruksvarer og produkter vi selv ville valgt til egne
+          biler, og vi påstår ikke mer enn vi kan holde. Det betyr også at vi
+          sier ifra når bilen din ikke trenger en behandling.
+        </p>
+        <p class="text-xs text-steel/70">{demoPricingNote}</p>
+      </div>
+      <figure>
+        <div class="overflow-hidden">
+          <Image
+            src={images.garage}
+            widths={[640, 1024]}
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            alt={imageAlt.garage}
+            class="aspect-[4/3] w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="mt-3 text-[11px] uppercase tracking-[0.16em] text-steel">
+          Eksempelfoto — verkstedmiljø
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ ARBEIDSPRINSIPPER — vertikal liste ============ -->
+  <section class="border-t border-line bg-paper-2/60">
+    <div class="wrap py-20 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-20">
+        <div>
+          <p class="label-rule">Prinsipper</p>
+          <h2 class="h-section mt-3">Slik behandler vi bilen din</h2>
+        </div>
+        <div>
+          {principles.map((p) => (
+            <div class="grid gap-1 border-t border-line py-5 sm:grid-cols-[220px_1fr] sm:gap-8">
+              <h3 class="text-base font-semibold text-ink">{p.title}</h3>
+              <p class="text-sm leading-relaxed text-steel">{p.text}</p>
+            </div>
+          ))}
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BESØK OSS ============ -->
+  <section class="wrap py-20 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <p class="label-rule">Besøk oss</p>
+        <h2 class="h-section mt-3">Verkstedet i Nydalen</h2>
+        <p class="mt-5 max-w-md text-[15px] leading-relaxed text-steel">
+          Parkering på egen tomt. Du kan levere bilen om morgenen og hente den
+          samme dag for de fleste behandlinger.
+        </p>
+        <dl class="mt-9 max-w-md">
+          <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
+            <dt class="text-steel">Adresse</dt>
+            <dd class="font-medium text-ink">
+              {site.address.street}, {site.address.postal}
+            </dd>
+          </div>
+          <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
+            <dt class="text-steel">Telefon</dt>
+            <dd>
+              <a href={site.phone.href} class="inline-flex items-center gap-2 font-medium text-ink transition-colors hover:text-copper">
+                <Phone class="h-4 w-4 text-copper" aria-hidden="true" />
+                {site.phone.display}
+              </a>
+            </dd>
+          </div>
+          <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
+            <dt class="text-steel">E-post</dt>
+            <dd>
+              <a href={`mailto:${site.email}`} class="font-medium text-ink transition-colors hover:text-copper">
+                {site.email}
+              </a>
+            </dd>
+          </div>
+          <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
+            <dt class="text-steel">Åpningstider</dt>
+            <dd class="space-y-1 text-steel">
+              {site.hours.map((h) => (
+                <p class="tabular">{h.label}: {h.value}</p>
+              ))}
+            </dd>
+          </div>
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </dl>
+      </div>
+
+      <div class="flex flex-col justify-center border-t border-line pt-10 lg:border-l lg:border-t-0 lg:pl-20 lg:pt-0">
+        <h3 class="text-xl font-semibold text-ink">Vil du vite mer?</h3>
+        <p class="mt-3 max-w-md text-sm leading-relaxed text-steel">
+          Les gjennom tjenestene, eller send oss en forespørsel. Vi svarer
+          alltid med et konkret forslag.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="/bestill-time" class="btn-primary">Bestill time</a>
+          <a href="/bestill-time#overslag" class="btn-secondary">
+            Få et prisoverslag
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

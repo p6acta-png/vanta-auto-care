@@ -1,0 +1,21 @@
+---
+import { site } from '../data/site';
+import { Phone } from '@lucide/astro';
+---
+
+<!-- Én tilbakeholden sticky CTA, kun på mobil -->
+<div
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-paper/15 bg-ink/95 px-4 py-3 backdrop-blur md:hidden"
+  style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom))"
+>
+  <div class="flex items-center gap-3">
+    <a href="/bestill-time" class="btn-primary-dark flex-1 !py-3">Bestill time</a>
+    <a
+      href={site.phone.href}
+      aria-label={`Ring ${site.phone.display}`}
+      class="btn-secondary-dark !px-4"
+    >
+      <Phone class="h-5 w-5" aria-hidden="true" />
+    </a>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+---
+import { services, sizeClasses, sizePrices, priceDisclaimer, demoPricingNote } from '../data/site';
+
+const sizeDependent = services.filter((s) => s.sizeDependent);
+const variable = services.filter((s) => !s.sizeDependent);
+---
+
+<div class="overflow-x-auto">
+  <table class="w-full min-w-[640px] border-collapse text-sm">
+    <caption class="sr-only">
+      Fiktive startpriser per bilstørrelse i kroner
+    </caption>
+    <thead>
+      <tr class="border-b border-line text-left">
+        <th scope="col" class="pb-3 pr-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">
+          Tjeneste
+        </th>
+        {
+          sizeClasses.map((s) => (
+            <th scope="col" class="pb-3 pr-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">
+              {s}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        sizeDependent.map((s) => (
+          <tr class="border-b border-line">
+            <th scope="row" class="py-3.5 pr-4 font-medium text-ink">
+              <a href={`/tjenester#${s.slug}`} class="transition-colors hover:text-copper">
+                {s.name}
+              </a>
+            </th>
+            {
+              (sizePrices[s.slug] ?? []).map((price) => (
+                <td class="py-3.5 pr-4 tabular">
+                  {price ? `fra ${price} kr` : 'etter vurdering'}
+                </td>
+              ))
+            }
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<ul class="mt-8 border-t border-line">
+  {
+    variable.map((s) => (
+      <li>
+        <a
+          href={`/tjenester#${s.slug}`}
+          class="group flex items-baseline justify-between gap-4 border-b border-line py-4 transition-colors hover:bg-paper-2/50"
+        >
+          <span class="font-medium text-ink group-hover:text-copper">{s.name}</span>
+          <span class="flex items-baseline gap-4 text-right">
+            <span class="text-xs text-steel">{s.duration}</span>
+            <span class="tabular">{s.priceFrom}</span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<p class="mt-6 text-sm leading-relaxed text-steel">{priceDisclaimer}</p>
+<p class="mt-2 text-xs text-steel/70">{demoPricingNote}</p>

@@ -1,0 +1,364 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { images, imageAlt } from '../data/images';
+import { site, services, sizeClasses, sizePrices, priceDisclaimer } from '../data/site';
+import ServiceIndex from '../components/ServiceIndex.astro';
+import ProcessList from '../components/ProcessList.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import MapsBlock from '../components/MapsBlock.astro';
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'AutoWash',
+  name: site.name,
+  url: site.url,
+  telephone: site.phone.display,
+  email: site.email,
+  image: site.url + '/og-image.jpg',
+  description: site.description,
+  priceRange: 'NOK',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: '0484',
+    addressLocality: 'Oslo',
+    addressCountry: 'NO',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '08:00',
+      closes: '17:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '10:00',
+      closes: '14:00',
+    },
+  ],
+  areaServed: { '@type': 'City', name: 'Oslo' },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Bilpleietjenester',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Utvendig bilpleie' }, price: '1190', priceCurrency: 'NOK' },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Innvendig dyprens' }, price: '2490', priceCurrency: 'NOK' },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Full bilpleie' }, price: '3490', priceCurrency: 'NOK' },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Keramisk coating' }, price: '7990', priceCurrency: 'NOK' },
+    ],
+  },
+});
+
+const miniSizes = sizeClasses.slice(0, 3);
+const miniRows = ['utvendig-bilpleie', 'innvendig-dyprens', 'full-bilpleie'];
+const miniNames = Object.fromEntries(services.map((s) => [s.slug, s.name]));
+---
+
+<Base
+  title="VANTA Auto Care — bilpleie, polering og coating i Oslo"
+  description={site.description}
+  jsonLd={jsonLd}
+>
+  <!-- ============ HERO — delt komposisjon ============ -->
+  <section class="border-b border-line bg-paper">
+    <div class="grid lg:grid-cols-[1fr_1.05fr]">
+      <div
+        class="flex flex-col justify-center px-5 pb-12 pt-6 sm:px-8 lg:py-24 lg:pl-[max(2.5rem,calc((100vw-72rem)/2))] lg:pr-16"
+      >
+        <p class="label-rule">Bilpleie i Oslo — Nydalen</p>
+        <h1 class="mt-6 font-display text-[clamp(2.9rem,5.4vw,4.75rem)] font-semibold leading-[0.93] tracking-[0.002em] text-ink">
+          Detaljert arbeid<span class="text-copper">.</span>
+          <br />
+          Synlig forskjell<span class="text-copper">.</span>
+        </h1>
+        <p class="mt-6 max-w-md text-[15px] leading-relaxed text-steel">
+          VANTA er et uavhengig bilpleieverksted i Oslo. Vask, rens, polering
+          og beskyttelse — utført for hånd, med en pris du kjenner før vi
+          begynner.
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+          <a href="/bestill-time" class="btn-primary btn-lg">Bestill time</a>
+          <a href="/bestill-time#overslag" class="btn-secondary btn-lg">
+            Få et prisoverslag
+          </a>
+        </div>
+      </div>
+
+      <figure class="relative order-first min-h-[280px] sm:min-h-[360px] lg:order-none lg:min-h-[600px]">
+        <Image
+          src={images.hero}
+          widths={[640, 1024, 1600, 2400]}
+          sizes="(max-width: 1024px) 100vw, 55vw"
+          alt={imageAlt.hero}
+          class="absolute inset-0 h-full w-full object-cover"
+          fetchpriority="high"
+        />
+        <figcaption
+          class="absolute bottom-4 left-4 text-[11px] uppercase tracking-[0.18em] text-paper/60"
+        >
+          Eksempelfoto
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="border-t border-line">
+      <div class="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-1.5 px-5 py-4 sm:grid-cols-3 sm:px-8">
+        <p class="text-xs tracking-[0.04em] text-steel">
+          {site.address.street}, {site.address.postal}
+        </p>
+        <p class="text-xs tracking-[0.04em] text-steel">
+          Man–fre 08.00–17.00 · Lør 10.00–14.00
+        </p>
+        <a
+          href={site.phone.href}
+          class="text-xs font-semibold tracking-[0.04em] text-ink transition-colors hover:text-copper"
+        >
+          {site.phone.display}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TJENESTER — indeks med priser ============ -->
+  <section class="wrap pb-20 pt-16 sm:pb-28 sm:pt-24">
+    <div class="mb-10 flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="label-rule">Tjenester</p>
+        <h2 class="h-section mt-3">Det vi gjør — og hva det koster</h2>
+      </div>
+      <a href="/tjenester" class="link-plain shrink-0">Se alle tjenester</a>
+    </div>
+    <p class="mb-9 max-w-2xl text-[15px] leading-relaxed text-steel">
+      Enkle behandlinger bestilles direkte med fast pris. Polering, coating og
+      PPF starter med en vurdering av bilen — du får et konkret overslag før
+      noe settes i gang.
+    </p>
+    <ServiceIndex items={services} />
+  </section>
+
+  <!-- ============ FØR / ETTER — visuelt bevis ============ -->
+  <section id="for-etter" class="scroll-mt-24 bg-ink py-20 sm:py-28">
+    <div class="wrap">
+      <div class="mb-10 max-w-2xl">
+        <p class="label-rule label-rule--dark">Resultater</p>
+        <h2 class="h-section mt-3 text-paper">Eksempel på resultat</h2>
+        <p class="mt-4 text-sm leading-relaxed text-paper/60">
+          Lakkrens og polering fjerner oksidering og lette riper. Dra i
+          håndtaket for å sammenligne.
+        </p>
+      </div>
+      <BeforeAfter />
+    </div>
+  </section>
+
+  <!-- ============ ARBEIDSMÅTE — asymmetrisk ============ -->
+  <section class="wrap py-20 sm:py-28">
+    <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+      <figure class="lg:col-span-7">
+        <div class="overflow-hidden">
+          <Image
+            src={images.paint}
+            widths={[640, 1024, 1600]}
+            sizes="(max-width: 1024px) 100vw, 58vw"
+            alt={imageAlt.paint}
+            class="aspect-[4/3] w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="mt-3 text-[11px] uppercase tracking-[0.16em] text-steel">
+          Polert lakk — eksempelfoto
+        </figcaption>
+      </figure>
+
+      <div class="lg:col-span-5">
+        <p class="label-rule">Slik jobber vi</p>
+        <h2 class="h-lede mt-3">Innendørs, under kontrollert lys</h2>
+        <p class="mt-4 max-w-md text-[15px] leading-relaxed text-steel">
+          De fleste biler i Oslo vaskes av maskiner. Vi gjør det for hånd,
+          innendørs — og bruker den tiden arbeidet krever. Derfor ser
+          resultatet også annerledes ut.
+        </p>
+        <dl class="mt-8 max-w-md">
+          <div class="grid grid-cols-[120px_1fr] gap-4 border-t border-line py-3 text-sm">
+            <dt class="text-steel">Utførelse</dt>
+            <dd class="text-ink">Vask, rens og polering for hånd, innendørs</dd>
+          </div>
+          <div class="grid grid-cols-[120px_1fr] gap-4 border-t border-line py-3 text-sm">
+            <dt class="text-steel">Kontinuitet</dt>
+            <dd class="text-ink">Én person følger bilen fra start til slutt</dd>
+          </div>
+          <div class="grid grid-cols-[120px_1fr] gap-4 border-t border-line py-3 text-sm">
+            <dt class="text-steel">Forutsigbarhet</dt>
+            <dd class="text-ink">Vurdering og fast pris før arbeidet starter</dd>
+          </div>
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </dl>
+        <a href="/om-oss" class="link-plain mt-8">Om oss</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRISER — forklaring + minitabell ============ -->
+  <section class="border-y border-line bg-paper-2/60">
+    <div class="wrap py-20 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="label-rule">Priser</p>
+          <h2 class="h-section mt-3">Prisen avhenger av bilen</h2>
+          <p class="mt-5 max-w-md text-[15px] leading-relaxed text-steel">
+            Vask og rens prises etter bilstørrelse. Polering, coating og PPF
+            vurderes alltid før vi setter pris — og du godkjenner før vi
+            begynner.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="/priser" class="btn-primary">Se full prisliste</a>
+            <a href="/bestill-time#overslag" class="btn-secondary">
+              Få et prisoverslag
+            </a>
+          </div>
+          <p class="mt-7 max-w-md text-xs leading-relaxed text-steel">
+            {priceDisclaimer}
+          </p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-sm">
+            <caption class="sr-only">Eksempelpriser i kroner per bilstørrelse</caption>
+            <thead>
+              <tr class="border-b border-line text-left">
+                <th scope="col" class="pb-2.5 pr-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-steel">
+                  Tjeneste
+                </th>
+                {miniSizes.map((s) => (
+                  <th scope="col" class="pb-2.5 pr-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-steel">
+                    {s}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {miniRows.map((slug) => (
+                <tr class="border-b border-line">
+                  <th scope="row" class="py-3 pr-3 font-medium text-ink">
+                    {miniNames[slug]}
+                  </th>
+                  {(sizePrices[slug] ?? []).slice(0, 3).map((p) => (
+                    <td class="py-3 pr-3 tabular">{p} kr</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="mt-4 text-xs text-steel">
+            Eksempelpriser i kroner. Full oversikt — med varebil — finner du på
+            <a href="/priser" class="underline underline-offset-2 transition-colors hover:text-copper">prissiden</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROSESS ============ -->
+  <section class="wrap py-20 sm:py-28">
+    <div class="mb-12 max-w-2xl">
+      <p class="label-rule">Slik fungerer det</p>
+      <h2 class="h-section mt-3">Fra forespørsel til ferdig bil</h2>
+      <p class="mt-4 text-sm leading-relaxed text-steel">
+        Ingen uforpliktende ringerunder. Du sender inn bilen, vi vurderer og
+        svarer med pris og tidspunkt.
+      </p>
+    </div>
+    <ProcessList />
+  </section>
+
+  <!-- ============ PROSJEKTER — kuratert mosaikk ============ -->
+  <section class="wrap pb-20 sm:pb-28">
+    <div class="mb-10 flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="label-rule">Prosjekter</p>
+        <h2 class="h-section mt-3">Eksempler fra verkstedet</h2>
+      </div>
+      <a href="/prosjekter" class="link-plain shrink-0">Se prosjekter</a>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-12">
+      <figure class="lg:col-span-7">
+        <div class="overflow-hidden">
+          <Image
+            src={images.wash}
+            widths={[640, 1024, 1600]}
+            sizes="(max-width: 1024px) 100vw, 58vw"
+            alt={imageAlt.wash}
+            class="aspect-[16/10] w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="mt-3 flex items-baseline justify-between text-sm">
+          <span class="font-medium text-ink">Håndvask og utvendig behandling</span>
+          <span class="text-xs text-steel">Eksempelfoto</span>
+        </figcaption>
+      </figure>
+      <figure class="lg:col-span-5">
+        <div class="overflow-hidden">
+          <Image
+            src={images.interior}
+            widths={[640, 1024]}
+            sizes="(max-width: 1024px) 100vw, 42vw"
+            alt={imageAlt.interior}
+            class="aspect-[4/5] w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="mt-3 flex items-baseline justify-between text-sm">
+          <span class="font-medium text-ink">Innvendig behandling</span>
+          <span class="text-xs text-steel">Eksempelfoto</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <figure class="mt-6">
+      <div class="overflow-hidden">
+        <Image
+          src={images.ppf}
+          widths={[640, 1024, 1600]}
+          sizes="100vw"
+          alt={imageAlt.ppf}
+          class="aspect-[16/7] w-full object-cover sm:aspect-[21/9]"
+          loading="lazy"
+        />
+      </div>
+      <figcaption class="mt-3 flex items-baseline justify-between text-sm">
+        <span class="font-medium text-ink">PPF — montering av lakkbeskyttelse</span>
+        <span class="text-xs text-steel">Eksempelfoto</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ LOKASJON ============ -->
+  <MapsBlock />
+
+  <!-- ============ SISTE CTA — én primærh handling ============ -->
+  <section class="bg-ink">
+    <div class="wrap flex flex-col gap-8 py-20 sm:py-24 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="font-display text-[clamp(2rem,4vw,3.25rem)] font-semibold leading-[0.98] tracking-[0.002em] text-paper">
+          Klar til å se hva bilen din trenger?
+        </h2>
+        <p class="mt-4 max-w-xl text-[15px] leading-relaxed text-paper/65">
+          Bestill en behandling direkte, eller send en forespørsel og få et
+          konkret prisoverslag. Vi svarer innen én arbeidsdag.
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-5">
+        <a href="/bestill-time" class="btn-primary-dark btn-lg">Bestill time</a>
+        <a href={site.phone.href} class="link-plain-dark">
+          {site.phone.display}
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

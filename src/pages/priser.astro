@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import PriceTable from '../components/PriceTable.astro';
+import { demoPricingNote } from '../data/site';
+
+const priceFactors = [
+  {
+    title: 'Bilens størrelse',
+    text: 'Vask, rens og felgrens prises etter bilklasse: mellomstor, stor, SUV eller varebil.',
+  },
+  {
+    title: 'Lakktilstanden',
+    text: 'Polering og coating prises etter hvor mye lakken faktisk trenger. Derfor starter vi med en vurdering.',
+  },
+  {
+    title: 'Valg av behandling',
+    text: 'En lett forsegling og flerlags coating er to forskjellige produkter med forskjellig pris og levetid.',
+  },
+  {
+    title: 'Ekstraarbeid',
+    text: 'Fjernede riper, tjære, kjæledyrhår og lignende kan legge til tid. Du godkjenner alltid prisen før vi fortsetter.',
+  },
+];
+---
+
+<Base
+  title="Priser — bilpleie i Oslo | VANTA Auto Care"
+  description="Priser for bilpleie i Oslo: utvendig bilpleie fra 1 190 kr, innvendig dyprens fra 2 490 kr, polering fra 4 900 kr, keramisk coating fra 7 990 kr og PPF fra 19 990 kr. Alle priser er fiktive demopriser."
+>
+  <section class="wrap py-16 sm:py-24">
+    <p class="label-rule">Priser</p>
+    <h1 class="h-display mt-4 max-w-3xl text-[clamp(2.4rem,5.5vw,4rem)]">
+      Priser du kan forholde deg til
+    </h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">
+      Vi oppgir startpriser for alle behandlinger. For tjenester der prisen
+      avhenger av bilen, får du et konkret overslag før noe settes i gang.
+    </p>
+    <p class="mt-5 inline-block border border-copper/40 bg-copper/10 px-3 py-1.5 text-xs font-medium text-copper-deep">
+      Merk: {demoPricingNote}
+    </p>
+  </section>
+
+  <section class="wrap pb-20 sm:pb-28">
+    <PriceTable />
+  </section>
+
+  <!-- ============ HVA PÅVIRKER PRISEN — vertikale rader ============ -->
+  <section class="border-t border-line bg-paper-2/60">
+    <div class="wrap py-20 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-20">
+        <div>
+          <p class="label-rule">Gjennomsiktighet</p>
+          <h2 class="h-section mt-3">Hva påvirker prisen?</h2>
+          <p class="mt-5 max-w-md text-[15px] leading-relaxed text-steel">
+            Startpriser er et utgangspunkt. Den endelige prisen avhenger av
+            bilens størrelse, tilstand og ønsket behandling.
+          </p>
+        </div>
+        <div>
+          {priceFactors.map((f) => (
+            <div class="grid gap-1 border-t border-line py-5 sm:grid-cols-[220px_1fr] sm:gap-8">
+              <h3 class="text-base font-semibold text-ink">{f.title}</h3>
+              <p class="text-sm leading-relaxed text-steel">{f.text}</p>
+            </div>
+          ))}
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIK FÅR DU EN ENDELIG PRIS ============ -->
+  <section class="wrap py-20 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
+      <div>
+        <p class="label-rule">Slik fungerer det</p>
+        <h2 class="h-section mt-3">Slik får du en endelig pris</h2>
+        <ol class="mt-10">
+          <li class="grid grid-cols-[56px_1fr] gap-5 border-t border-line py-5">
+            <span class="font-display text-3xl font-semibold leading-none text-copper">01</span>
+            <p class="text-[15px] leading-relaxed text-steel">
+              <span class="font-semibold text-ink">Velg behandling.</span>
+              Enkle behandlinger bestilles direkte med fast pris.
+            </p>
+          </li>
+          <li class="grid grid-cols-[56px_1fr] gap-5 border-t border-line py-5">
+            <span class="font-display text-3xl font-semibold leading-none text-copper">02</span>
+            <p class="text-[15px] leading-relaxed text-steel">
+              <span class="font-semibold text-ink">Polering, coating eller PPF?</span>
+              Send en forespørsel — vi vurderer bilen og svarer med et konkret
+              overslag innen én arbeidsdag.
+            </p>
+          </li>
+          <li class="grid grid-cols-[56px_1fr] gap-5 border-t border-line py-5">
+            <span class="font-display text-3xl font-semibold leading-none text-copper">03</span>
+            <p class="text-[15px] leading-relaxed text-steel">
+              <span class="font-semibold text-ink">Godkjenn prisen.</span>
+              Ingenting settes i gang før du har godkjent pris og tidspunkt.
+            </p>
+          </li>
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </ol>
+      </div>
+
+      <div class="flex flex-col justify-center">
+        <h3 class="text-xl font-semibold text-ink">Klar for et overslag?</h3>
+        <p class="mt-3 max-w-md text-sm leading-relaxed text-steel">
+          Fortell oss om bilen og ønsket behandling. Det tar to minutter, og du
+          forplikter deg ikke til noe.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="/bestill-time#overslag" class="btn-primary">Få et prisoverslag</a>
+          <a href="/faq" class="btn-secondary">Vanlige spørsmål</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,17 @@
+{
+  "name": "VANTA Auto Care — bilpleie i Oslo",
+  "short_name": "VANTA",
+  "description": "Bilpleie, polering, keramisk coating og PPF i Oslo. Fiktiv demo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f1ea",
+  "theme_color": "#1e1c18",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { services, demoPricingNote } from '../data/site';
+import { images, imageAlt } from '../data/images';
+import { Check } from '@lucide/astro';
+
+const withImage = services.map((s, i) => ({
+  ...s,
+  flip: i % 2 === 1, // vekslende bildeplassering
+}));
+---
+
+<Base
+  title="Tjenester — bilpleie, polering, coating og PPF i Oslo | VANTA Auto Care"
+  description="Utvendig bilpleie, innvendig dyprens, maskinpolering, lakkorrigering, keramisk coating, lakforsegling, felgrens og PPF i Oslo. Se hva som inngår, startpris og varighet for hver behandling."
+>
+  <section class="wrap py-16 sm:py-24">
+    <p class="label-rule">Tjenester</p>
+    <h1 class="h-display mt-4 max-w-3xl text-[clamp(2.4rem,5.5vw,4rem)]">
+      Behandlinger vi utfører
+    </h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">
+      For hver behandling står det hva som inngår, hvem den passer for,
+      startpris og varighet. Enkle behandlinger bestiller du direkte —
+      polering, coating og PPF starter med en vurdering av bilen.
+    </p>
+  </section>
+
+  <!-- ============ INNHOLD — oversikt med priser ============ -->
+  <nav class="wrap pb-16 sm:pb-24" aria-label="Innhold på siden">
+    <p class="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-steel">
+      Innhold
+    </p>
+    <div class="grid gap-x-14 sm:grid-cols-2">
+      {
+        services.map((s, i) => (
+          <a
+            href={`#${s.slug}`}
+            class="group flex items-baseline justify-between gap-4 border-t border-line py-3.5 transition-colors hover:bg-paper-2/50"
+          >
+            <span class="text-[15px] font-medium text-ink group-hover:text-copper">
+              {String(i + 1).padStart(2, '0')} · {s.name}
+            </span>
+            <span class="shrink-0 text-sm tabular text-steel">{s.priceFrom}</span>
+          </a>
+        ))
+      }
+    </div>
+    <p class="border-b border-line" aria-hidden="true"></p>
+  </nav>
+
+  <!-- ============ TJENESTESEKSJONER — vekslende komposisjon ============ -->
+  {
+    withImage.map((s) => (
+      <section id={s.slug} class="scroll-mt-24 border-t border-line">
+        <div class="wrap py-16 sm:py-20">
+          <div
+            class:list={[
+              'grid gap-10 lg:grid-cols-12 lg:gap-14',
+            ]}
+          >
+            {s.image && (
+              <figure
+                class:list={[
+                  'lg:col-span-5',
+                  s.flip ? 'lg:order-2' : '',
+                ]}
+              >
+                <div class="overflow-hidden">
+                  <Image
+                    src={images[s.image]}
+                    widths={[640, 1024]}
+                    sizes="(max-width: 1024px) 100vw, 42vw"
+                    alt={imageAlt[s.image]}
+                    class="aspect-[4/3] w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <figcaption class="mt-3 text-[11px] uppercase tracking-[0.16em] text-steel">
+                  Eksempelfoto — {s.name.toLowerCase()}
+                </figcaption>
+              </figure>
+            )}
+
+            <div
+              class:list={[
+                s.image ? 'lg:col-span-7' : 'lg:col-span-8',
+                s.flip ? 'lg:order-1' : '',
+              ]}
+            >
+              <h2 class="h-sub font-display text-3xl font-semibold leading-tight text-ink">
+                {s.name}
+              </h2>
+              <p class="mt-3 max-w-xl text-[15px] leading-relaxed text-ink">
+                {s.description}
+              </p>
+
+              <p class="mt-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">
+                Passer for
+              </p>
+              <p class="mt-2 max-w-xl text-sm leading-relaxed text-steel">{s.suitedFor}</p>
+
+              <p class="mt-7 text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">
+                Hva som inngår
+              </p>
+              <ul class="mt-3 grid max-w-xl gap-x-10 gap-y-2.5 sm:grid-cols-2">
+                {s.includes.map((inc) => (
+                  <li class="flex items-start gap-2.5 text-sm text-ink">
+                    <Check class="mt-0.5 h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
+                    {inc}
+                  </li>
+                ))}
+              </ul>
+
+              <dl class="mt-9 max-w-xl border-t border-line">
+                <div class="grid grid-cols-[110px_1fr] gap-4 border-b border-line py-3.5 text-sm sm:grid-cols-[140px_1fr]">
+                  <dt class="text-steel">Startpris</dt>
+                  <dd class="tabular font-semibold text-ink">{s.priceFrom}</dd>
+                </div>
+                <div class="grid grid-cols-[110px_1fr] gap-4 border-b border-line py-3.5 text-sm sm:grid-cols-[140px_1fr]">
+                  <dt class="text-steel">Varighet</dt>
+                  <dd class="text-ink">{s.duration}</dd>
+                </div>
+                <div class="grid grid-cols-[110px_1fr] gap-4 border-b border-line py-3.5 text-sm sm:grid-cols-[140px_1fr]">
+                  <dt class="text-steel">{s.sizeDependent ? 'Størrelse' : 'Vurdering'}</dt>
+                  <dd class="text-ink">
+                    {s.sizeDependent
+                      ? 'Prisen varierer med bilstørrelse — se prissiden.'
+                      : 'Prisen settes etter vurdering av bilen.'}
+                  </dd>
+                </div>
+                <div class="grid grid-cols-[110px_1fr] gap-4 py-3.5 text-sm sm:grid-cols-[140px_1fr]">
+                  <dt class="text-steel">Neste steg</dt>
+                  <dd>
+                    {s.booking === 'direct' ? (
+                      <a
+                        href={`/bestill-time?tjeneste=${s.slug}`}
+                        class="font-semibold text-copper underline-offset-4 hover:underline"
+                      >
+                        Bestill time
+                      </a>
+                    ) : (
+                      <a
+                        href="/bestill-time#overslag"
+                        class="font-semibold text-copper underline-offset-4 hover:underline"
+                      >
+                        Få et konkret prisoverslag
+                      </a>
+                    )}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- ============ AVSLUTTENDE CTA ============ -->
+  <section class="border-t border-line bg-ink">
+    <div class="wrap flex flex-col gap-8 py-16 sm:py-20 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="h-section text-paper">Usikker på hva bilen trenger?</h2>
+        <p class="mt-3 text-[15px] leading-relaxed text-paper/65">
+          Send oss en forespørsel med bil og ønsket resultat. Vi vurderer bilen
+          og svarer med et konkret forslag — uten forpliktelser.
+        </p>
+      </div>
+      <a href="/bestill-time#overslag" class="btn-primary-dark shrink-0">
+        Send en forespørsel
+      </a>
+    </div>
+  </section>
+
+  <p class="wrap py-8 text-xs text-steel/70">{demoPricingNote}</p>
+</Base>

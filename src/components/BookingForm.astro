@@ -1,0 +1,343 @@
+---
+import { services, site } from '../data/site';
+
+const direct = services.filter((s) => s.booking === 'direct');
+const quote = services.filter((s) => s.booking === 'quote');
+const times = ['08.00', '09.30', '11.00', '12.30', '14.00', '15.30'];
+---
+
+<div id="overslag" class="scroll-mt-24 border border-line bg-paper">
+  <!-- Skjema (kun front-end i demoen) -->
+  <form id="booking-form" novalidate class="p-6 sm:p-8">
+    <div class="field">
+      <label for="service">Behandling</label>
+      <select id="service" name="service" required>
+        <optgroup label="Bestill direkte">
+          {direct.map((s) => (
+            <option value={s.slug}>{s.name}</option>
+          ))}
+        </optgroup>
+        <optgroup label="Krever prisoverslag">
+          {quote.map((s) => (
+            <option value={s.slug}>{s.name}</option>
+          ))}
+        </optgroup>
+      </select>
+      <p id="service-hint" class="hint">
+        Enkle behandlinger bestilles direkte. Polering, coating og PPF starter
+        med en vurdering av bilen.
+      </p>
+    </div>
+
+    <fieldset class="mode-direct">
+      <legend class="field-legend">Dine opplysninger</legend>
+      <div class="grid gap-x-4 sm:grid-cols-2">
+        <div class="field">
+          <label for="navn">Navn</label>
+          <input id="navn" name="navn" type="text" autocomplete="name" placeholder="Ola Nordmann" />
+          <p class="error" data-error-for="navn">Skriv inn navnet ditt.</p>
+        </div>
+        <div class="field">
+          <label for="telefon">Telefon</label>
+          <input id="telefon" name="telefon" type="tel" autocomplete="tel" placeholder="900 00 000" />
+          <p class="error" data-error-for="telefon">Skriv inn et gyldig telefonnummer.</p>
+        </div>
+      </div>
+      <div class="field">
+        <label for="epost">E-post</label>
+        <input id="epost" name="epost" type="email" autocomplete="email" placeholder="ola@eksempel.no" />
+        <p class="error" data-error-for="epost">Skriv inn en gyldig e-postadresse.</p>
+      </div>
+    </fieldset>
+
+    <fieldset class="mode-direct">
+      <legend class="field-legend">Bilen</legend>
+      <div class="field">
+        <label for="merke">Merke og modell</label>
+        <input id="merke" name="merke" type="text" placeholder="f.eks. VW Golf 2021" />
+        <p class="error" data-error-for="merke">Skriv inn merke og modell.</p>
+      </div>
+    </fieldset>
+
+    <fieldset id="fs-direct" class="mode-direct">
+      <legend class="field-legend">Når passer det?</legend>
+      <div class="grid gap-x-4 sm:grid-cols-2">
+        <div class="field">
+          <label for="dato">Dato</label>
+          <input id="dato" name="dato" type="date" />
+          <p class="error" data-error-for="dato">Velg en dato.</p>
+        </div>
+        <div class="field">
+          <label for="tid">Tidspunkt</label>
+          <select id="tid" name="tid">
+            <option value="">Velg tidspunkt</option>
+            {times.map((t) => <option value={t}>{t}</option>)}
+          </select>
+          <p class="error" data-error-for="tid">Velg et tidspunkt.</p>
+        </div>
+      </div>
+      <p class="hint">
+        Levering og henting samme dag for de fleste behandlinger. Vi
+        bekrefter tidspunktet innen én arbeidsdag.
+      </p>
+    </fieldset>
+
+    <fieldset id="fs-quote" class="mode-quote hidden">
+      <legend class="field-legend">Bilen og ønsket behandling</legend>
+      <div class="grid gap-x-4 sm:grid-cols-3">
+        <div class="field">
+          <label for="aar">Årsmodell (valgfritt)</label>
+          <input id="aar" name="aar" type="text" inputmode="numeric" placeholder="f.eks. 2019" />
+        </div>
+        <div class="field sm:col-span-2">
+          <label for="regnr">Registreringsnummer (valgfritt)</label>
+          <input id="regnr" name="regnr" type="text" placeholder="f.eks. AB 12345" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="melding">Beskriv bilen og ønsket resultat</label>
+        <textarea
+          id="melding"
+          name="melding"
+          rows="4"
+          placeholder="f.eks. «Mørk bil med kverner på panseret. Ønsker vurdering av lakkorrigering + coating.»"
+        ></textarea>
+      </div>
+      <div class="field">
+        <label for="bilde">Bilder av bilen (valgfritt)</label>
+        <input id="bilde" name="bilde" type="file" accept="image/*" />
+        <p class="hint">
+          Bilder av lakken gjør vurderingen raskere. I denne demoen sendes
+          ingen filer — feltet er kun et eksempel.
+        </p>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="submit-btn" class="btn-primary w-full sm:w-auto">
+      Bestill behandling
+    </button>
+    <p class="mt-4 text-xs leading-relaxed text-steel">
+      {site.demoNotice} Skjemaet sender ingen data — det er en ren
+      front-end-demo med validering.
+    </p>
+  </form>
+
+  <!-- Bekreftelse -->
+  <div id="form-success" class="hidden p-6 sm:p-8" role="status" aria-live="polite">
+    <p class="font-display text-3xl font-semibold text-ink">Takk, <span id="success-name"></span>!</p>
+    <p id="success-text" class="mt-3 max-w-md text-[15px] leading-relaxed text-steel"></p>
+    <ol class="mt-6 max-w-md space-y-3 text-sm text-steel">
+      <li class="flex gap-3">
+        <span class="font-display text-lg font-semibold text-copper">1</span>
+        Vi går gjennom forespørselen din.
+      </li>
+      <li class="flex gap-3">
+        <span class="font-display text-lg font-semibold text-copper">2</span>
+        Du får svar med pris og tidspunkt innen én arbeidsdag.
+      </li>
+      <li class="flex gap-3">
+        <span class="font-display text-lg font-semibold text-copper">3</span>
+        Ingenting settes i gang før du har godkjent.
+      </li>
+    </ol>
+    <p class="mt-6 text-xs text-steel/70">
+      Demo: ingen bekreftelses-epost sendes. {site.demoNotice}
+    </p>
+    <button type="button" id="reset-btn" class="btn-secondary mt-6">Send en ny forespørsel</button>
+  </div>
+</div>
+
+<style>
+  .field {
+    margin-bottom: 1.1rem;
+  }
+  .field legend.field-legend {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-steel);
+  }
+  .field label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .field :is(input[type='text'], input[type='tel'], input[type='email'], input[type='date'], select, textarea) {
+    width: 100%;
+    border: 1px solid var(--color-line);
+    background: var(--color-paper);
+    padding: 0.625rem 0.875rem;
+    font-size: 15px;
+    color: var(--color-ink);
+    transition: border-color 0.15s ease;
+  }
+  .field :is(input, select, textarea)::placeholder {
+    color: color-mix(in srgb, var(--color-steel) 60%, transparent);
+  }
+  .field :is(input, select, textarea):focus {
+    border-color: var(--color-copper);
+    outline: none;
+  }
+  .field .hint {
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--color-steel);
+  }
+  .field .error {
+    display: none;
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-error);
+  }
+  .field.has-error :is(input, select, textarea) {
+    border-color: var(--color-error);
+  }
+  .field.has-error .error {
+    display: block;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('booking-form') as HTMLFormElement | null;
+  if (!form) throw new Error('booking form missing');
+
+  const service = document.getElementById('service') as HTMLSelectElement;
+  const serviceHint = document.getElementById('service-hint') as HTMLParagraphElement;
+  const fsDirect = document.getElementById('fs-direct') as HTMLFieldSetElement;
+  const fsQuote = document.getElementById('fs-quote') as HTMLFieldSetElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const success = document.getElementById('form-success') as HTMLDivElement;
+  const successName = document.getElementById('success-name') as HTMLSpanElement;
+  const successText = document.getElementById('success-text') as HTMLParagraphElement;
+  const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
+  const dato = document.getElementById('dato') as HTMLInputElement;
+  const isQuote = () => {
+    const opt = service.selectedOptions[0];
+    return opt?.parentElement?.getAttribute('label') === 'Krever prisoverslag';
+  };
+
+  const updateMode = () => {
+    const quoteMode = isQuote();
+    fsDirect.classList.toggle('hidden', quoteMode);
+    fsQuote.classList.toggle('hidden', !quoteMode);
+    (fsDirect.querySelectorAll('input, select')).forEach((el) => {
+      if (el.id !== 'service') (el as HTMLInputElement).required = !quoteMode;
+    });
+    (fsQuote.querySelectorAll('input, textarea')).forEach((el) => {
+      if (!['aar', 'regnr', 'bilde'].includes((el as HTMLInputElement).id)) {
+        (el as HTMLInputElement).required = quoteMode;
+      }
+    });
+    submitBtn.textContent = quoteMode ? 'Send prisoverslag' : 'Bestill behandling';
+    serviceHint.textContent = quoteMode
+      ? 'Send detaljer og bilder → vi vurderer bilen → du får et konkret forslag.'
+      : 'Du får bekreftet tidspunkt innen én arbeidsdag.';
+  };
+
+  const setError = (id: string, show: boolean) => {
+    const field = document.getElementById(id)?.closest('.field');
+    field?.classList.toggle('has-error', show);
+    const input = document.getElementById(id) as HTMLInputElement | null;
+    if (input) input.setAttribute('aria-invalid', String(show));
+  };
+
+  const validators: Record<string, () => boolean> = {
+    navn: () => {
+      const v = (document.getElementById('navn') as HTMLInputElement).value.trim();
+      return v.length >= 2;
+    },
+    telefon: () => {
+      const v = (document.getElementById('telefon') as HTMLInputElement).value.trim();
+      return /^[+0-9][0-9\s\-]{7,}$/.test(v);
+    },
+    epost: () => {
+      const v = (document.getElementById('epost') as HTMLInputElement).value.trim();
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    },
+    merke: () => {
+      const v = (document.getElementById('merke') as HTMLInputElement).value.trim();
+      return v.length >= 2;
+    },
+    dato: () => {
+      const v = (document.getElementById('dato') as HTMLInputElement).value;
+      return v !== '';
+    },
+    tid: () => {
+      const v = (document.getElementById('tid') as HTMLSelectElement).value;
+      return v !== '';
+    },
+  };
+
+  const validate = (): boolean => {
+    let firstInvalid: string | null = null;
+    let allOk = true;
+    for (const id of Object.keys(validators)) {
+      const el = document.getElementById(id) as HTMLInputElement | null;
+      if (!el || el.disabled || el.closest('.hidden')) continue;
+      const ok = validators[id]();
+      setError(id, !ok);
+      if (!ok && !firstInvalid) firstInvalid = id;
+      if (!ok) allOk = false;
+    }
+    if (firstInvalid) {
+      (document.getElementById(firstInvalid) as HTMLElement).focus();
+    }
+    return allOk;
+  };
+
+  service.addEventListener('change', updateMode);
+  form.addEventListener('input', (e) => {
+    const target = e.target as HTMLElement;
+    const id = target.id;
+    if (id && validators[id]) setError(id, !validators[id]());
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    const navn = (document.getElementById('navn') as HTMLInputElement).value.trim();
+    const chosen = service.selectedOptions[0]?.textContent ?? '';
+    successName.textContent = navn.split(' ')[0];
+    successText.textContent = isQuote()
+      ? `Vi har mottatt forespørselen om ${chosen.toLowerCase()}. Vi vurderer bilen og sender et konkret prisoverslag.`
+      : `Vi har mottatt bestillingen av ${chosen.toLowerCase()}. Du får bekreftet tidspunkt innen én arbeidsdag.`;
+    form.classList.add('hidden');
+    success.classList.remove('hidden');
+    success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  resetBtn.addEventListener('click', () => {
+    form.reset();
+    updateMode();
+    form.classList.remove('hidden');
+    success.classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Minste gyldige dato = i dag
+  const today = new Date();
+  dato.min = today.toISOString().split('T')[0];
+
+  // Forhåndsvalg: ?tjeneste=slug eller #overslag
+  const params = new URLSearchParams(window.location.search);
+  const preselect = params.get('tjeneste');
+  if (preselect && Array.from(service.options).some((o) => o.value === preselect)) {
+    service.value = preselect;
+  } else if (window.location.hash === '#overslag') {
+    const firstQuote = Array.from(service.options).find(
+      (o) => o.parentElement?.getAttribute('label') === 'Krever prisoverslag'
+    );
+    if (firstQuote) service.value = firstQuote.value;
+  }
+  updateMode();
+</script>

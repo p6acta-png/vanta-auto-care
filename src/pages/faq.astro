@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import FaqList from '../components/FaqList.astro';
+import { faqs, site } from '../data/site';
+import { ArrowRight } from '@lucide/astro';
+---
+
+<Base
+  title="Spørsmål og svar — bilpleie i Oslo | VANTA Auto Care"
+  description="Svar på vanlige spørsmål om bilpleie i Oslo: varighet, priser, coating, elbil, levering på kveldstid og mer."
+>
+  <section class="wrap py-16 sm:py-24">
+    <p class="label-rule">FAQ</p>
+    <h1 class="h-display mt-4 max-w-3xl text-[clamp(2.4rem,5.5vw,4rem)]">
+      Spørsmål og svar
+    </h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">
+      Det vi blir spurt om oftest. Finner du ikke svaret her, ring oss eller
+      send en forespørsel.
+    </p>
+  </section>
+
+  <section class="wrap max-w-3xl pb-20 sm:pb-28">
+    <FaqList items={faqs} />
+
+    <div class="mt-12 flex flex-col gap-6 border-t border-line pt-10 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-ink">Har du et annet spørsmål?</h2>
+        <p class="mt-2 text-sm text-steel">
+          Ring {site.phone.display} i åpningstiden, eller send oss en melding.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/bestill-time" class="btn-primary">
+          Bestill time
+          <ArrowRight class="h-4 w-4" aria-hidden="true" />
+        </a>
+        <a href="/bestill-time#overslag" class="btn-secondary">Få et prisoverslag</a>
+      </div>
+    </div>
+  </section>
+</Base>

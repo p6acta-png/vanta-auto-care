@@ -1,0 +1,94 @@
+---
+import { services, site } from '../data/site';
+import { MapPin, Phone, Mail } from '@lucide/astro';
+
+const year = new Date().getFullYear();
+const serviceLinks = services.slice(0, 6);
+---
+
+<footer class="bg-ink text-paper">
+  <div class="wrap grid gap-12 py-16 sm:py-20 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <a href="/" class="flex flex-col leading-none" aria-label="{site.name} — hjem">
+        <span class="font-display text-2xl font-semibold tracking-[0.07em] text-paper">
+          VANTA<span class="text-copper">.</span>
+        </span>
+        <span class="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-paper/50">
+          Auto&nbsp;Care
+        </span>
+      </a>
+      <p class="mt-6 max-w-xs text-sm leading-relaxed text-paper/70">
+        Uavhengig bilpleieverksted i Oslo. Vask, rens, polering og beskyttelse —
+        utført grundig, til en pris du kjenner på forhånd.
+      </p>
+    </div>
+
+    <nav aria-label="Tjenester">
+      <h2 class="eyebrow eyebrow--dark mb-5">Tjenester</h2>
+      <ul class="space-y-2.5 text-sm">
+        {
+          serviceLinks.map((s) => (
+            <li>
+              <a
+                href={`/tjenester#${s.slug}`}
+                class="text-paper/70 transition-colors hover:text-copper"
+              >
+                {s.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="eyebrow eyebrow--dark mb-5">Kontakt</h2>
+      <address class="space-y-2.5 text-sm not-italic text-paper/70">
+        <p class="flex items-start gap-2">
+          <MapPin class="mt-0.5 h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
+          <span>
+            {site.address.street}
+            <br />
+            {site.address.postal}
+          </span>
+        </p>
+        <p>
+          <a href={site.phone.href} class="flex items-center gap-2 transition-colors hover:text-copper">
+            <Phone class="h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
+            {site.phone.display}
+          </a>
+        </p>
+        <p>
+          <a href={`mailto:${site.email}`} class="flex items-center gap-2 transition-colors hover:text-copper">
+            <Mail class="h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
+            {site.email}
+          </a>
+        </p>
+      </address>
+    </div>
+
+    <div>
+      <h2 class="eyebrow eyebrow--dark mb-5">Åpningstider</h2>
+      <ul class="space-y-2.5 text-sm text-paper/70">
+        {
+          site.hours.map((h) => (
+            <li class="flex justify-between gap-4">
+              <span>{h.label}</span>
+              <span class="text-right tabular">{h.value}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="rule-dark">
+    <div class="wrap flex flex-col gap-3 py-6 text-xs text-paper/45 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.name}. {site.demoNotice}</p>
+      <p class="sm:text-right">
+        Eksempelfoto: Unsplash · Wikimedia Commons (CC BY / CC BY-SA)
+      </p>
+    </div>
+  </div>
+  <div class="h-20 md:hidden" aria-hidden="true"></div>
+</footer>

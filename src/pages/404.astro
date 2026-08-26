@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { ArrowRight } from '@lucide/astro';
+---
+
+<Base
+  title="Siden finnes ikke (404) | VANTA Auto Care"
+  description="Siden du leter etter finnes ikke."
+>
+  <section class="wrap flex min-h-[55vh] flex-col justify-center py-24">
+    <p class="eyebrow">404</p>
+    <h1 class="h-display mt-3 max-w-2xl text-[clamp(2.4rem,5.5vw,4rem)]">
+      Siden finnes ikke
+    </h1>
+    <p class="mt-5 max-w-xl text-[15px] leading-relaxed text-steel">
+      Adressen kan være feil, eller siden kan ha flyttet. Herfra er det enkelt
+      å komme videre:
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="/" class="btn-primary">
+        Til forsiden
+        <ArrowRight class="h-4 w-4" aria-hidden="true" />
+      </a>
+      <a href="/bestill-time" class="btn-secondary">Bestill time</a>
+    </div>
+  </section>
+</Base>

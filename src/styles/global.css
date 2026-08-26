@@ -1,0 +1,169 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   VANTA Auto Care — design system v2
+   Redaksjonell komposisjon · rolig typografi · få overflater
+   Deep charcoal · warm off-white · steel gray · dark copper
+   ============================================================ */
+
+@theme {
+  --font-sans: 'DM Sans Variable', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+  --font-display: 'Barlow Condensed', 'DM Sans Variable', ui-sans-serif,
+    sans-serif;
+
+  --color-ink: #1e1c18;
+  --color-ink-2: #26231e;
+  --color-ink-3: #322e27;
+  --color-paper: #f4f1ea;
+  --color-paper-2: #ece7dc;
+  --color-paper-3: #e2dccd;
+  --color-line: #d8d2c3;
+  --color-steel: #6f6a5f;
+  --color-copper: #a05a26;
+  --color-copper-deep: #7c4319;
+  --color-copper-soft: #c98a54;
+  --color-error: #9c3a2e;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-copper);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-copper);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Sidelayout */
+  .wrap {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .wrap-narrow {
+    @apply mx-auto w-full max-w-3xl px-5 sm:px-8;
+  }
+
+  /* Etikett med kobberstrek — brukes sparsomt */
+  .label-rule {
+    @apply inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-copper-deep;
+  }
+  .label-rule::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--color-copper);
+  }
+  .label-rule--dark {
+    @apply text-copper-soft;
+  }
+
+  /* Overskrifter — Barlow Condensed brukes med måte */
+  .h-display {
+    @apply font-display font-semibold leading-[0.95] tracking-[0.002em] text-ink;
+    text-wrap: balance;
+  }
+
+  .h-section {
+    @apply font-display text-[2.1rem] font-semibold leading-[1] tracking-[0.002em] text-ink sm:text-[2.9rem];
+    text-wrap: balance;
+  }
+
+  .h-lede {
+    @apply font-display text-[1.65rem] font-semibold leading-[1.05] tracking-[0.002em] text-ink sm:text-[2.1rem];
+    text-wrap: balance;
+  }
+
+  /* Knapper — rette kanter, tydelig hierarki */
+  .btn-lg {
+    @apply px-7 py-3.5 text-[15px];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-ink px-5 py-3 text-sm font-semibold text-paper transition-colors duration-200 hover:bg-copper;
+  }
+
+  .btn-primary-dark {
+    @apply inline-flex items-center justify-center gap-2 bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-copper hover:text-paper;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 border border-ink/25 bg-transparent px-5 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-copper hover:text-copper;
+  }
+
+  .btn-secondary-dark {
+    @apply inline-flex items-center justify-center gap-2 border border-paper/35 bg-transparent px-5 py-3 text-sm font-semibold text-paper transition-colors duration-200 hover:border-copper hover:text-copper;
+  }
+
+  /* Tekstlenker */
+  .link-plain {
+    @apply text-sm font-semibold text-ink underline decoration-line underline-offset-4 transition-colors hover:text-copper hover:decoration-copper;
+  }
+
+  .link-plain-dark {
+    @apply text-sm font-semibold text-paper underline decoration-paper/40 underline-offset-4 transition-colors hover:text-copper hover:decoration-copper;
+  }
+
+  /* Hårfine linjer */
+  .rule {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .rule-dark {
+    border-top: 1px solid rgb(244 241 234 / 0.16);
+  }
+
+  /* Visuell åpenbaring (kun CSS) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
