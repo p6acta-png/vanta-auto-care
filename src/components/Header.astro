@@ -2,29 +2,35 @@
 import { nav, site } from '../data/site';
 import { Menu, X, Phone } from '@lucide/astro';
 
-const current = Astro.url.pathname;
-const isHome = current === '/' || current === '/index.html';
+interface Props {
+  home?: boolean;
+}
+
+const { home = false } = Astro.props;
+const baseNoSlash = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const pagePath = Astro.url.pathname.replace(/\/+$/, '').replace(baseNoSlash, '') || '/';
+const isHome = home;
 ---
 
-<header class="sticky top-0 z-50 border-b border-line bg-paper">
+<header id="site-header" data-solid={isHome ? 'false' : 'true'}>
   <div class="wrap flex h-16 items-center justify-between gap-6">
     <a href="/" class="flex flex-col leading-none" aria-label="{site.name} — hjem">
-      <span class="font-display text-[22px] font-semibold tracking-[0.07em] text-ink">
+      <span class="font-display text-[23px] font-semibold tracking-[0.09em]">
         VANTA<span class="text-copper">.</span>
       </span>
-      <span class="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.34em] text-steel">
+      <span class="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.32em] opacity-60">
         Auto&nbsp;Care
       </span>
     </a>
 
-    <nav class="hidden items-center gap-7 md:flex" aria-label="Hovedmeny">
+    <nav class="hidden items-center gap-8 md:flex" aria-label="Hovedmeny">
       {
         nav.map((item) => (
           <a
             href={item.href}
             class:list={[
-              'text-sm font-medium transition-colors hover:text-copper',
-              !isHome && current.startsWith(item.href) ? 'text-copper' : 'text-ink',
+              'text-[13px] font-medium transition-colors hover:text-copper',
+              !isHome && pagePath.startsWith(item.href) ? 'text-copper' : '',
             ]}
           >
             {item.label}
@@ -33,20 +39,22 @@ const isHome = current === '/' || current === '/index.html';
       }
     </nav>
 
-    <div class="hidden items-center gap-5 md:flex">
+    <div class="hidden items-center gap-6 md:flex">
       <a
         href={site.phone.href}
-        class="flex items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-copper"
+        class="flex items-center gap-1.5 text-[13px] font-medium opacity-80 transition-colors hover:text-copper"
       >
-        <Phone class="h-4 w-4" aria-hidden="true" />
+        <Phone class="h-3.5 w-3.5" aria-hidden="true" />
         {site.phone.display}
       </a>
-      <a href="/bestill-time" class="btn-primary !px-4 !py-2.5">Bestill time</a>
+      <a href="/bestill-time" class="btn btn-cta !px-5 !py-2.5">
+        Bestill time
+      </a>
     </div>
 
     <button
       id="menu-toggle"
-      class="flex h-10 w-10 items-center justify-center text-ink md:hidden"
+      class="flex h-10 w-10 items-center justify-center md:hidden"
       aria-expanded="false"
       aria-controls="mobile-menu"
       aria-label="Åpne meny"
@@ -62,8 +70,8 @@ const isHome = current === '/' || current === '/index.html';
   class="fixed inset-0 z-40 hidden overflow-y-auto bg-ink text-paper opacity-0 transition-opacity duration-200 md:hidden"
   aria-hidden="true"
 >
-  <div class="wrap flex min-h-full flex-col py-8">
-    <nav class="flex flex-col gap-1 border-b border-paper/15 pb-8" aria-label="Meny">
+  <div class="wrap flex min-h-full flex-col pt-24">
+    <nav class="flex flex-col border-b border-paper/15 pb-6" aria-label="Meny">
       {
         nav.map((item) => (
           <a
@@ -83,7 +91,7 @@ const isHome = current === '/' || current === '/index.html';
       </a>
     </div>
 
-    <div class="mt-auto space-y-4 border-t border-paper/15 pt-8 text-sm text-paper/80">
+    <div class="mt-auto space-y-4 border-t border-paper/15 py-8 text-sm text-paper/80">
       <a href={site.phone.href} class="flex items-center gap-2 font-medium text-paper hover:text-copper">
         <Phone class="h-4 w-4" aria-hidden="true" />
         {site.phone.display}
@@ -99,6 +107,20 @@ const isHome = current === '/' || current === '/index.html';
 </div>
 
 <script>
+  const header = document.getElementById('site-header');
+  const isHome = header?.dataset.solid === 'false';
+  if (header) {
+    const update = () => {
+      if (window.scrollY > 30) {
+        header.dataset.solid = 'true';
+      } else if (isHome) {
+        header.dataset.solid = 'false';
+      }
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+
   const toggle = document.getElementById('menu-toggle');
   const panel = document.getElementById('mobile-menu');
   const iconOpen = document.getElementById('icon-open');

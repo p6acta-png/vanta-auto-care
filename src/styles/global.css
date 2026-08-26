@@ -1,9 +1,10 @@
 @import 'tailwindcss';
 
 /* ============================================================
-   VANTA Auto Care — design system v2
-   Redaksjonell komposisjon · rolig typografi · få overflater
-   Deep charcoal · warm off-white · steel gray · dark copper
+   VANTA Auto Care — design system v3
+   «The technical ledger» — redaksjonelt verksted-manual.
+   Store fotografiske flater · spesifikasjons-rader · versaler
+   Deep charcoal · warm white · concrete · steel · muted copper
    ============================================================ */
 
 @theme {
@@ -12,17 +13,17 @@
   --font-display: 'Barlow Condensed', 'DM Sans Variable', ui-sans-serif,
     sans-serif;
 
-  --color-ink: #1e1c18;
-  --color-ink-2: #26231e;
-  --color-ink-3: #322e27;
-  --color-paper: #f4f1ea;
-  --color-paper-2: #ece7dc;
-  --color-paper-3: #e2dccd;
-  --color-line: #d8d2c3;
-  --color-steel: #6f6a5f;
-  --color-copper: #a05a26;
+  --color-ink: #1b1916;
+  --color-ink-2: #24211d;
+  --color-paper: #f3efe7;
+  --color-paper-2: #ece6da;
+  --color-concrete: #e6dfd2;
+  --color-line: #d3ccbc;
+  --color-rule: #b4ab98;
+  --color-steel: #6e685c;
+  --color-copper: #a35a26;
   --color-copper-deep: #7c4319;
-  --color-copper-soft: #c98a54;
+  --color-copper-soft: #d1935c;
   --color-error: #9c3a2e;
 }
 
@@ -61,23 +62,57 @@
 }
 
 @layer components {
-  /* Sidelayout */
+  /* Sidelayout — få kolonner, bevisste bredder */
   .wrap {
-    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+    @apply mx-auto w-full max-w-[1240px] px-5 sm:px-8;
   }
 
   .wrap-narrow {
-    @apply mx-auto w-full max-w-3xl px-5 sm:px-8;
+    @apply mx-auto w-full max-w-2xl px-5 sm:px-8;
   }
 
-  /* Etikett med kobberstrek — brukes sparsomt */
+  /* Mikro-etiketter — teknisk, smal, versal */
+  .micro {
+    @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-steel;
+  }
+
+  .micro--dark {
+    @apply text-paper/55;
+  }
+
+  .eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-steel;
+  }
+
+  .eyebrow--dark {
+    @apply text-paper/55;
+  }
+
+  /* Seksjonsoverskrift med kobbermerke */
+  .ledger-h {
+    @apply inline-flex items-baseline gap-3 text-[17px] font-semibold;
+  }
+  .ledger-h::before {
+    content: '';
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    background: var(--color-copper);
+    transform: translateY(-1px);
+  }
+
+  .ledger-h--dark {
+    @apply text-paper;
+  }
+
+  /* Tidligere «label-rule» — redesignet: mikro + kobberstrek */
   .label-rule {
-    @apply inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-copper-deep;
+    @apply inline-flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-copper-deep;
   }
   .label-rule::before {
     content: '';
     display: block;
-    width: 2rem;
+    width: 14px;
     height: 1px;
     background: var(--color-copper);
   }
@@ -85,59 +120,175 @@
     @apply text-copper-soft;
   }
 
-  /* Overskrifter — Barlow Condensed brukes med måte */
+  /* Display-typografi — fargen settes per bruk */
+  .display-hero {
+    @apply font-display text-[clamp(3.1rem,8.5vw,6.75rem)] font-semibold leading-[0.9] tracking-[-0.005em];
+    text-wrap: balance;
+  }
+
+  .display-xl {
+    @apply font-display text-[clamp(2.2rem,4.6vw,3.75rem)] font-semibold leading-[0.92] tracking-[-0.004em];
+    text-wrap: balance;
+  }
+
   .h-display {
-    @apply font-display font-semibold leading-[0.95] tracking-[0.002em] text-ink;
+    @apply font-display text-[clamp(2.3rem,5vw,3.9rem)] font-semibold leading-[0.93] tracking-[-0.003em];
     text-wrap: balance;
   }
 
   .h-section {
-    @apply font-display text-[2.1rem] font-semibold leading-[1] tracking-[0.002em] text-ink sm:text-[2.9rem];
+    @apply font-display text-[clamp(1.9rem,3.6vw,2.9rem)] font-semibold leading-[0.95] tracking-[-0.002em];
     text-wrap: balance;
   }
 
   .h-lede {
-    @apply font-display text-[1.65rem] font-semibold leading-[1.05] tracking-[0.002em] text-ink sm:text-[2.1rem];
+    @apply font-display text-[1.6rem] font-semibold leading-[1.02] sm:text-[1.9rem];
     text-wrap: balance;
   }
 
-  /* Knapper — rette kanter, tydelig hierarki */
-  .btn-lg {
-    @apply px-7 py-3.5 text-[15px];
+  /* Knapper — versaler, rette kanter, ett hierarki */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.12em] transition-colors duration-200;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-ink px-5 py-3 text-sm font-semibold text-paper transition-colors duration-200 hover:bg-copper;
+    @apply inline-flex items-center justify-center gap-2 bg-ink px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-paper transition-colors duration-200 hover:bg-copper;
   }
 
   .btn-primary-dark {
-    @apply inline-flex items-center justify-center gap-2 bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-copper hover:text-paper;
+    @apply inline-flex items-center justify-center gap-2 bg-paper px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:bg-copper hover:text-paper;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 border border-ink/25 bg-transparent px-5 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-copper hover:text-copper;
+    @apply inline-flex items-center justify-center gap-2 border border-ink/30 px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:border-copper hover:text-copper;
   }
 
   .btn-secondary-dark {
-    @apply inline-flex items-center justify-center gap-2 border border-paper/35 bg-transparent px-5 py-3 text-sm font-semibold text-paper transition-colors duration-200 hover:border-copper hover:text-copper;
+    @apply inline-flex items-center justify-center gap-2 border border-paper/40 px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-paper transition-colors duration-200 hover:border-copper hover:text-copper;
   }
 
   /* Tekstlenker */
   .link-plain {
-    @apply text-sm font-semibold text-ink underline decoration-line underline-offset-4 transition-colors hover:text-copper hover:decoration-copper;
+    @apply text-sm font-semibold text-ink underline decoration-rule underline-offset-4 transition-colors hover:text-copper hover:decoration-copper;
   }
 
   .link-plain-dark {
     @apply text-sm font-semibold text-paper underline decoration-paper/40 underline-offset-4 transition-colors hover:text-copper hover:decoration-copper;
   }
 
-  /* Hårfine linjer */
+  /* Regel-linjer */
   .rule {
     border-top: 1px solid var(--color-line);
   }
 
   .rule-dark {
     border-top: 1px solid rgb(244 241 234 / 0.16);
+  }
+
+  .rule-strong {
+    border-top: 1px solid var(--color-rule);
+  }
+
+  /* Skjæremerke rundt utvalgte bilder — teknisk signatur */
+  .crop-mark {
+    position: relative;
+  }
+  .crop-mark::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgb(163 90 38 / 0.55);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Hode — flytende over hero, fast på innhold */
+  #site-header {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 50;
+    color: var(--color-paper);
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease;
+  }
+  #site-header[data-solid='true'] {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border-bottom-color: var(--color-line);
+  }
+  #site-header .btn-cta {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  #site-header .btn-cta:hover {
+    background: var(--color-copper);
+    color: var(--color-paper);
+  }
+  #site-header[data-solid='true'] .btn-cta {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  #site-header[data-solid='true'] .btn-cta:hover {
+    background: var(--color-copper);
+    color: var(--color-paper);
+  }
+
+  /* Tjenesteoppføringer — katalog med progressiv åpenbaring */
+  .svc-row summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem 2rem;
+    align-items: baseline;
+    cursor: pointer;
+    list-style: none;
+    padding: 1.15rem 0;
+    border-top: 1px solid var(--color-line);
+    transition: background-color 0.2s ease;
+  }
+  .svc-row summary::-webkit-details-marker {
+    display: none;
+  }
+  .svc-row summary:hover {
+    background: var(--color-paper-2);
+  }
+  .svc-row[open] summary {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .svc-row .svc-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 1.75rem;
+  }
+  .svc-row .svc-ind {
+    width: 10px;
+    height: 10px;
+    background: var(--color-copper);
+    transition: transform 0.25s ease;
+  }
+  .svc-row[open] .svc-ind {
+    transform: rotate(45deg);
+  }
+  .svc-row .svc-body {
+    display: none;
+  }
+  .svc-row[open] .svc-body {
+    display: block;
+    padding: 1.5rem 0 2rem;
+  }
+
+  /* Veiledning — aktive valg med kobberkant */
+  .guide-opt {
+    border-left: 2px solid transparent;
+    padding-left: 1.25rem;
+  }
+  .guide-opt.is-active,
+  .guide-opt[aria-pressed='true'] {
+    border-left-color: var(--color-copper);
   }
 
   /* Visuell åpenbaring (kun CSS) */
@@ -148,12 +299,10 @@
       opacity 0.6s ease,
       transform 0.6s ease;
   }
-
   .reveal.is-visible {
     opacity: 1;
     transform: none;
   }
-
   @media (prefers-reduced-motion: reduce) {
     .reveal {
       opacity: 1;

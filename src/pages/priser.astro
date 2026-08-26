@@ -27,11 +27,9 @@ const priceFactors = [
   title="Priser — bilpleie i Oslo | VANTA Auto Care"
   description="Priser for bilpleie i Oslo: utvendig bilpleie fra 1 190 kr, innvendig dyprens fra 2 490 kr, polering fra 4 900 kr, keramisk coating fra 7 990 kr og PPF fra 19 990 kr. Alle priser er fiktive demopriser."
 >
-  <section class="wrap py-16 sm:py-24">
-    <p class="label-rule">Priser</p>
-    <h1 class="h-display mt-4 max-w-3xl text-[clamp(2.4rem,5.5vw,4rem)]">
-      Priser du kan forholde deg til
-    </h1>
+  <section class="wrap py-14 sm:py-20">
+    <p class="micro">Priser</p>
+    <h1 class="h-display mt-4 max-w-3xl">Priser du kan forholde deg til</h1>
     <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">
       Vi oppgir startpriser for alle behandlinger. For tjenester der prisen
       avhenger av bilen, får du et konkret overslag før noe settes i gang.
@@ -41,25 +39,25 @@ const priceFactors = [
     </p>
   </section>
 
-  <section class="wrap pb-20 sm:pb-28">
+  <section class="wrap pb-16 sm:pb-24">
     <PriceTable />
   </section>
 
-  <!-- ============ HVA PÅVIRKER PRISEN — vertikale rader ============ -->
-  <section class="border-t border-line bg-paper-2/60">
-    <div class="wrap py-20 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-20">
+  <!-- ============ HVA PÅVIRKER PRISEN ============ -->
+  <section class="border-t border-line bg-concrete">
+    <div class="wrap py-14 sm:py-16">
+      <div class="grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-20">
         <div>
-          <p class="label-rule">Gjennomsiktighet</p>
-          <h2 class="h-section mt-3">Hva påvirker prisen?</h2>
-          <p class="mt-5 max-w-md text-[15px] leading-relaxed text-steel">
+          <p class="micro">Gjennomsiktighet</p>
+          <h2 class="display-xl mt-3">Hva påvirker prisen?</h2>
+          <p class="mt-4 max-w-md text-sm leading-relaxed text-steel">
             Startpriser er et utgangspunkt. Den endelige prisen avhenger av
             bilens størrelse, tilstand og ønsket behandling.
           </p>
         </div>
         <div>
           {priceFactors.map((f) => (
-            <div class="grid gap-1 border-t border-line py-5 sm:grid-cols-[220px_1fr] sm:gap-8">
+            <div class="grid gap-1 border-t border-line py-4 sm:grid-cols-[220px_1fr] sm:gap-8">
               <h3 class="text-base font-semibold text-ink">{f.title}</h3>
               <p class="text-sm leading-relaxed text-steel">{f.text}</p>
             </div>
@@ -71,20 +69,20 @@ const priceFactors = [
   </section>
 
   <!-- ============ SLIK FÅR DU EN ENDELIG PRIS ============ -->
-  <section class="wrap py-20 sm:py-24">
+  <section class="wrap py-16 sm:py-24">
     <div class="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
       <div>
-        <p class="label-rule">Slik fungerer det</p>
-        <h2 class="h-section mt-3">Slik får du en endelig pris</h2>
-        <ol class="mt-10">
-          <li class="grid grid-cols-[56px_1fr] gap-5 border-t border-line py-5">
+        <p class="micro">Slik fungerer det</p>
+        <h2 class="display-xl mt-3">Slik får du en endelig pris</h2>
+        <ol class="mt-8">
+          <li class="grid grid-cols-[52px_1fr] gap-5 border-t border-line py-4">
             <span class="font-display text-3xl font-semibold leading-none text-copper">01</span>
             <p class="text-[15px] leading-relaxed text-steel">
               <span class="font-semibold text-ink">Velg behandling.</span>
               Enkle behandlinger bestilles direkte med fast pris.
             </p>
           </li>
-          <li class="grid grid-cols-[56px_1fr] gap-5 border-t border-line py-5">
+          <li class="grid grid-cols-[52px_1fr] gap-5 border-t border-line py-4">
             <span class="font-display text-3xl font-semibold leading-none text-copper">02</span>
             <p class="text-[15px] leading-relaxed text-steel">
               <span class="font-semibold text-ink">Polering, coating eller PPF?</span>
@@ -92,7 +90,7 @@ const priceFactors = [
               overslag innen én arbeidsdag.
             </p>
           </li>
-          <li class="grid grid-cols-[56px_1fr] gap-5 border-t border-line py-5">
+          <li class="grid grid-cols-[52px_1fr] gap-5 border-t border-line py-4">
             <span class="font-display text-3xl font-semibold leading-none text-copper">03</span>
             <p class="text-[15px] leading-relaxed text-steel">
               <span class="font-semibold text-ink">Godkjenn prisen.</span>

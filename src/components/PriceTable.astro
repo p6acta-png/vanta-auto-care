@@ -6,18 +6,18 @@ const variable = services.filter((s) => !s.sizeDependent);
 ---
 
 <div class="overflow-x-auto">
-  <table class="w-full min-w-[640px] border-collapse text-sm">
+  <table class="w-full min-w-[620px] border-collapse text-sm">
     <caption class="sr-only">
       Fiktive startpriser per bilstørrelse i kroner
     </caption>
     <thead>
       <tr class="border-b border-line text-left">
-        <th scope="col" class="pb-3 pr-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">
+        <th scope="col" class="pb-3 pr-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-steel">
           Tjeneste
         </th>
         {
           sizeClasses.map((s) => (
-            <th scope="col" class="pb-3 pr-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">
+            <th scope="col" class="pb-3 pr-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-steel">
               {s}
             </th>
           ))
@@ -35,7 +35,7 @@ const variable = services.filter((s) => !s.sizeDependent);
             </th>
             {
               (sizePrices[s.slug] ?? []).map((price) => (
-                <td class="py-3.5 pr-4 tabular">
+                <td class="py-3.5 pr-4 font-display text-lg tabular">
                   {price ? `fra ${price} kr` : 'etter vurdering'}
                 </td>
               ))
@@ -53,12 +53,14 @@ const variable = services.filter((s) => !s.sizeDependent);
       <li>
         <a
           href={`/tjenester#${s.slug}`}
-          class="group flex items-baseline justify-between gap-4 border-b border-line py-4 transition-colors hover:bg-paper-2/50"
+          class="group grid grid-cols-1 items-baseline gap-x-8 gap-y-1 border-b border-line py-3.5 transition-colors hover:bg-paper-2/60 sm:grid-cols-[1fr_auto]"
         >
-          <span class="font-medium text-ink group-hover:text-copper">{s.name}</span>
-          <span class="flex items-baseline gap-4 text-right">
+          <span class="font-medium text-ink transition-colors group-hover:text-copper">
+            {s.name}
+          </span>
+          <span class="flex flex-wrap items-baseline gap-x-6 gap-y-0.5 sm:flex-col sm:items-end sm:gap-y-0">
             <span class="text-xs text-steel">{s.duration}</span>
-            <span class="tabular">{s.priceFrom}</span>
+            <span class="font-display text-[1.3rem] font-semibold tabular">{s.priceFrom}</span>
           </span>
         </a>
       </li>

@@ -3,9 +3,35 @@
 // Alt redigerbart innhold samles her. Fiktivt selskap, demo-nettside.
 // ============================================================
 
+export type ServiceCategory = 'utvendig' | 'innvendig' | 'lakk' | 'beskyttelse';
+
+export const categories: { id: ServiceCategory; label: string; desc: string }[] = [
+  {
+    id: 'utvendig',
+    label: 'Utvendig',
+    desc: 'Vask, rens og vedlikehold av bilens ytre — for hånd, med riktige produkter.',
+  },
+  {
+    id: 'innvendig',
+    label: 'Innvendig',
+    desc: 'Rens og behandling av kupeen — tekstil, skinn, plast og glass.',
+  },
+  {
+    id: 'lakk',
+    label: 'Lakk',
+    desc: 'Rens, polering og korrigering — fra lett oppfriskning til dyp behandling.',
+  },
+  {
+    id: 'beskyttelse',
+    label: 'Beskyttelse',
+    desc: 'Coating, forsegling og PPF-film som beskytter lakken over tid.',
+  },
+];
+
 export type Service = {
   slug: string;
   name: string;
+  category: ServiceCategory;
   short: string; // én setning, brukes i oversikter
   description: string; // lengre, brukes på tjenestesiden
   includes: string[];
@@ -14,7 +40,7 @@ export type Service = {
   duration: string;
   booking: 'direct' | 'quote'; // direkte bestilling vs. prisoverslag
   sizeDependent: boolean;
-  image: 'paint' | 'wash' | 'interior' | 'garage' | 'road' | null;
+  image: 'paint' | 'wash' | 'interior' | 'garage' | 'road' | 'wheel' | 'ppf' | 'foam' | 'pressure' | null;
 };
 
 export const site = {
@@ -73,6 +99,7 @@ export const nav = [
 export const services: Service[] = [
   {
     slug: 'utvendig-bilpleie',
+    category: 'utvendig',
     name: 'Utvendig bilpleie',
     short: 'Grundig utvendig vask med håndtørk og finish.',
     description:
@@ -95,6 +122,7 @@ export const services: Service[] = [
   },
   {
     slug: 'innvendig-dyprens',
+    category: 'innvendig',
     name: 'Innvendig dyprens',
     short: 'Støvsuging, rens av tekstil og skinn, og behandling av plast og lister.',
     description:
@@ -117,6 +145,7 @@ export const services: Service[] = [
   },
   {
     slug: 'full-bilpleie',
+    category: 'utvendig',
     name: 'Full bilpleie',
     short: 'Utvendig og innvendig behandling i samme besøk.',
     description:
@@ -137,6 +166,7 @@ export const services: Service[] = [
   },
   {
     slug: 'lakkrens-polering',
+    category: 'lakk',
     name: 'Lakkrens og polering',
     short: 'Maskinpolering som fjerner oksidering og lette riper.',
     description:
@@ -157,6 +187,7 @@ export const services: Service[] = [
   },
   {
     slug: 'lakkorrigering',
+    category: 'lakk',
     name: 'Lakkorrigering',
     short: 'Dyp korrigering for riper, kverner og hologrammer.',
     description:
@@ -177,6 +208,7 @@ export const services: Service[] = [
   },
   {
     slug: 'keramisk-coating',
+    category: 'beskyttelse',
     name: 'Keramisk coating',
     short: 'Hard, hydrofob beskyttelse som varer i årevis.',
     description:
@@ -197,6 +229,7 @@ export const services: Service[] = [
   },
   {
     slug: 'lakforsegling',
+    category: 'beskyttelse',
     name: 'Lakforsegling',
     short: 'Forsegling som forlenger effekten av vask og polering.',
     description:
@@ -216,6 +249,7 @@ export const services: Service[] = [
   },
   {
     slug: 'felgrens',
+    category: 'utvendig',
     name: 'Felgrens',
     short: 'Rens av felger og dekk, inkludert bremstøv og innsiden av felgen.',
     description:
@@ -236,6 +270,7 @@ export const services: Service[] = [
   },
   {
     slug: 'ppf',
+    category: 'beskyttelse',
     name: 'PPF – lakkbeskyttelse',
     short: 'Selvhelbredende film som beskytter lakken mot steinsprut og riper.',
     description:

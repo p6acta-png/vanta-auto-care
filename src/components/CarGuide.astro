@@ -1,0 +1,156 @@
+---
+import { services, site } from '../data/site';
+
+const bySlug = Object.fromEntries(services.map((s) => [s.slug, s]));
+
+const options = [
+  {
+    id: 'oppfriskning',
+    label: 'En rask oppfriskning',
+    desc: 'Bilen skal se velstelt ut — vask og finish',
+    target: 'utvendig-bilpleie',
+    note: 'Felgrens kan legges til som tillegg.',
+  },
+  {
+    id: 'glans',
+    label: 'Bedre glans på lakken',
+    desc: 'Matt eller slitt lakk — fjerne oksidering og lette riper',
+    target: 'lakkrens-polering',
+    note: 'Polering prises alltid etter en vurdering av lakken.',
+  },
+  {
+    id: 'innvendig',
+    label: 'Grundig innvendig rengjøring',
+    desc: 'Kupeen trenger en ordentlig rens',
+    target: 'innvendig-dyprens',
+    note: 'Bilen må leveres tømt for løse gjenstander.',
+  },
+  {
+    id: 'beskyttelse',
+    label: 'Beskyttelse av lakken',
+    desc: 'Coating, forsegling eller film',
+    target: 'keramisk-coating',
+    note: 'PPF passer for biler som kjører mye på motorvei.',
+  },
+  {
+    id: 'usikker',
+    label: 'Usikker — hjelp meg å velge',
+    desc: 'Vi vurderer bilen og foreslår riktig behandling',
+    target: null,
+    note: 'Vurderingen er gratis og uforpliktende.',
+  },
+];
+
+const guideUrl = '/bestill-time#overslag';
+---
+
+<!-- Veiledning: «Hva trenger bilen din?» — enkel, interaktiv hjelp -->
+<div class="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
+  <div role="group" aria-label="Hva trenger bilen din?">
+    {
+      options.map((o) => (
+        <button
+          type="button"
+          data-guide={o.id}
+          data-target={o.target ?? ''}
+          data-note={o.note}
+          aria-pressed={o.id === 'oppfriskning' ? 'true' : 'false'}
+          class="guide-opt grid w-full grid-cols-1 items-baseline gap-1 border-t border-line py-4 text-left transition-colors hover:bg-paper-2/50"
+        >
+          <span class="block font-medium text-ink">{o.label}</span>
+          <span class="block text-sm text-steel">{o.desc}</span>
+        </button>
+      ))
+    }
+    <p class="border-b border-line" aria-hidden="true"></p>
+  </div>
+
+  <div class="guide-panel-wrap bg-concrete p-7 sm:p-9" aria-live="polite">
+    {
+      options.map((o, i) => {
+        const s = o.target ? bySlug[o.target] : null;
+        return (
+          <div data-panel={o.id} class:list={['guide-panel', i !== 0 && 'hidden']}>
+            {s ? (
+              <>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-copper-deep">
+                  Anbefalt behandling
+                </p>
+                <h3 class="mt-3 font-display text-3xl font-semibold leading-tight text-ink">
+                  {s.name}
+                </h3>
+                <p class="mt-3 text-[15px] leading-relaxed text-steel">{s.short}</p>
+                <dl class="mt-6 max-w-sm">
+                  <div class="grid grid-cols-[110px_1fr] gap-4 border-t border-line py-2.5 text-sm">
+                    <dt class="text-steel">Startpris</dt>
+                    <dd class="tabular font-semibold text-ink">{s.priceFrom}</dd>
+                  </div>
+                  <div class="grid grid-cols-[110px_1fr] gap-4 border-t border-line py-2.5 text-sm">
+                    <dt class="text-steel">Varighet</dt>
+                    <dd class="text-ink">{s.duration}</dd>
+                  </div>
+                  <p class="border-b border-line" aria-hidden="true"></p>
+                </dl>
+                <p class="mt-4 text-xs leading-relaxed text-steel">{o.note}</p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                  {s.booking === 'direct' ? (
+                    <a href={`/bestill-time?tjeneste=${s.slug}`} class="btn-primary">
+                      Bestill time
+                    </a>
+                  ) : (
+                    <a href={guideUrl} class="btn-primary">
+                      Få et prisoverslag
+                    </a>
+                  )}
+                  <a
+                    href={`/tjenester#${s.slug}`}
+                    class="btn-secondary"
+                  >
+                    Mer om tjenesten
+                  </a>
+                </div>
+              </>
+            ) : (
+              <>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-copper-deep">
+                  Vi hjelper deg
+                </p>
+                <h3 class="mt-3 font-display text-3xl font-semibold leading-tight text-ink">
+                  Send en forespørsel
+                </h3>
+                <p class="mt-3 text-[15px] leading-relaxed text-steel">
+                  Fortell oss om bilen og hva du lurer på. Vi vurderer bilen og
+                  foreslår riktig behandling — med pris og tidspunkt.
+                </p>
+                <p class="mt-4 text-xs leading-relaxed text-steel">{o.note}</p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                  <a href={guideUrl} class="btn-primary">Få et prisoverslag</a>
+                  <a href={site.phone.href} class="btn-secondary">
+                    {site.phone.display}
+                  </a>
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+</div>
+
+<script>
+  const opts = document.querySelectorAll<HTMLButtonElement>('.guide-opt');
+  const panels = document.querySelectorAll<HTMLElement>('.guide-panel');
+  const setActive = (id: string) => {
+    opts.forEach((b) => {
+      b.setAttribute('aria-pressed', b.dataset.guide === id ? 'true' : 'false');
+      b.classList.toggle('is-active', b.dataset.guide === id);
+    });
+    panels.forEach((p) => {
+      p.classList.toggle('hidden', p.dataset.panel !== id);
+    });
+  };
+  opts.forEach((b) => {
+    b.addEventListener('click', () => setActive(b.dataset.guide ?? ''));
+  });
+</script>

@@ -16,8 +16,17 @@ interface Props {
 }
 
 const { title, description, jsonLd } = Astro.props;
-const canonical = new URL(Astro.url.pathname, site.url).toString();
-const ogImage = site.url + '/og-image.jpg';
+const origin = Astro.site ?? site.url;
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const canonical = new URL(Astro.url.pathname, origin).toString();
+const ogImage = new URL(basePath + 'og-image.jpg', origin).toString();
+const faviconHref = basePath + 'favicon.svg';
+const manifestHref = basePath + 'manifest.webmanifest';
+const baseNoSlash = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const pagePath = Astro.url.pathname.replace(/\/+$/, '');
+const isHome = pagePath === baseNoSlash || pagePath === '';
 ---
 
 <!doctype html>
@@ -37,8 +46,8 @@ const ogImage = site.url + '/og-image.jpg';
     <meta property="og:locale" content="nb_NO" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#1e1c18" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <link rel="manifest" href={manifestHref} />
     {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
   </head>
   <body>
@@ -48,8 +57,8 @@ const ogImage = site.url + '/og-image.jpg';
     >
       Hopp til innhold
     </a>
-    <Header />
-    <main id="main">
+    <Header home={isHome} />
+    <main id="main" class:list={isHome ? '' : 'pt-16'}>
       <slot />
     </main>
     <Footer />

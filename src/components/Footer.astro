@@ -7,31 +7,31 @@ const serviceLinks = services.slice(0, 6);
 ---
 
 <footer class="bg-ink text-paper">
-  <div class="wrap grid gap-12 py-16 sm:py-20 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-    <div>
+  <div class="wrap grid gap-12 py-16 sm:py-20 lg:grid-cols-12">
+    <div class="lg:col-span-4">
       <a href="/" class="flex flex-col leading-none" aria-label="{site.name} — hjem">
-        <span class="font-display text-2xl font-semibold tracking-[0.07em] text-paper">
+        <span class="font-display text-3xl font-semibold tracking-[0.09em] text-paper">
           VANTA<span class="text-copper">.</span>
         </span>
-        <span class="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-paper/50">
+        <span class="mt-1 text-[10px] font-semibold uppercase tracking-[0.32em] text-paper/50">
           Auto&nbsp;Care
         </span>
       </a>
-      <p class="mt-6 max-w-xs text-sm leading-relaxed text-paper/70">
+      <p class="mt-6 max-w-xs text-sm leading-relaxed text-paper/60">
         Uavhengig bilpleieverksted i Oslo. Vask, rens, polering og beskyttelse —
-        utført grundig, til en pris du kjenner på forhånd.
+        utført for hånd, til en pris du kjenner på forhånd.
       </p>
     </div>
 
-    <nav aria-label="Tjenester">
-      <h2 class="eyebrow eyebrow--dark mb-5">Tjenester</h2>
-      <ul class="space-y-2.5 text-sm">
+    <nav class="lg:col-span-2" aria-label="Tjenester">
+      <h2 class="micro micro--dark mb-4">Tjenester</h2>
+      <ul class="space-y-2 text-sm">
         {
           serviceLinks.map((s) => (
             <li>
               <a
                 href={`/tjenester#${s.slug}`}
-                class="text-paper/70 transition-colors hover:text-copper"
+                class="text-paper/65 transition-colors hover:text-copper"
               >
                 {s.name}
               </a>
@@ -41,9 +41,9 @@ const serviceLinks = services.slice(0, 6);
       </ul>
     </nav>
 
-    <div>
-      <h2 class="eyebrow eyebrow--dark mb-5">Kontakt</h2>
-      <address class="space-y-2.5 text-sm not-italic text-paper/70">
+    <div class="lg:col-span-3">
+      <h2 class="micro micro--dark mb-4">Kontakt</h2>
+      <address class="space-y-2.5 text-sm not-italic text-paper/65">
         <p class="flex items-start gap-2">
           <MapPin class="mt-0.5 h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
           <span>
@@ -67,12 +67,12 @@ const serviceLinks = services.slice(0, 6);
       </address>
     </div>
 
-    <div>
-      <h2 class="eyebrow eyebrow--dark mb-5">Åpningstider</h2>
-      <ul class="space-y-2.5 text-sm text-paper/70">
+    <div class="lg:col-span-3">
+      <h2 class="micro micro--dark mb-4">Åpningstider</h2>
+      <ul class="space-y-2 text-sm text-paper/65">
         {
           site.hours.map((h) => (
-            <li class="flex justify-between gap-4">
+            <li class="flex justify-between gap-4 border-b border-paper/10 pb-2">
               <span>{h.label}</span>
               <span class="text-right tabular">{h.value}</span>
             </li>
@@ -83,11 +83,9 @@ const serviceLinks = services.slice(0, 6);
   </div>
 
   <div class="rule-dark">
-    <div class="wrap flex flex-col gap-3 py-6 text-xs text-paper/45 sm:flex-row sm:items-center sm:justify-between">
-      <p>© {year} {site.name}. {site.demoNotice}</p>
-      <p class="sm:text-right">
-        Eksempelfoto: Unsplash · Wikimedia Commons (CC BY / CC BY-SA)
-      </p>
+    <div class="wrap flex flex-col gap-2 py-5 text-[11px] uppercase tracking-[0.12em] text-paper/40 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.name} · {site.demoNotice}</p>
+      <p>Eksempelfoto: Unsplash · Wikimedia Commons (CC BY / CC BY-SA)</p>
     </div>
   </div>
   <div class="h-20 md:hidden" aria-hidden="true"></div>

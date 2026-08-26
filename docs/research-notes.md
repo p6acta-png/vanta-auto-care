@@ -82,3 +82,45 @@ bunnskråning, tjenestebilder som ikke avbildet tjenesten.
    billedtekst. Kreditering i footer.
 9. Fjerning: SectionHead/ServiceRows (ubrukt), hover-bakgrunner, piler,
    skygge på skjema, dekorativ SVG-kartillustrasjon.
+
+## Redesign-runde 3 — katalog, veiledning og verksted-realitet
+
+- Tjenester gruppert i fire kategorier: Utvendig / Innvendig / Lakk /
+  Beskyttelse (nytt `category`-felt i datalaget).
+- Tjenestesiden er nå en katalog: kategorinavigasjon, stort kategoribilde
+  per kategori, redaksjonelle tjenesteoppføringer med pris/tid/neste steg.
+  Keramisk coating og PPF får mørke «flaggskip»-blokker.
+- Ny interaktiv veiledning på forsiden: «Hva trenger bilen din?» — fem valg
+  som foreslår behandling, pris og neste steg (ingen terminologi-krav).
+- Verksted-seksjon med arbeidsbilder: aktivt skum → håndvask → behandling
+  (ekte arbeid, ikke bilgalleri).
+- CTA-hierarki strammet: én primærh handling per seksjon; premium-tjenester
+  leder til prisoverslag, enkle til bestilling.
+- `astro.config.mjs` er endret (eksternt) til GitHub Pages-oppsett med
+  `base: /vanta-auto-care` — Base-layouten er nå base-aware (favicon,
+  manifest, canonical, OG-bilde), og QA kjøres mot base-stien.
+
+## Redesign-runde 4 — «the technical ledger» (hard reset)
+
+Konsept: redaksjonelt verksted-manual — spesifikasjonsrader, versaler,
+store fotografiske flater, teknisk mikrotypografi.
+
+- Nytt designsystem (v3): `micro` (10 px versaler), `display-hero/display-xl`
+  (Barlow, stor skala), versal-knapper (12 px, sporing), `concrete`-overflate,
+  kobbermerke på seksjonsoverskrifter, skjæremerke (`crop-mark`) på utvalgte
+  bilder, spesifikasjons-rader (`svc-row` med progressiv åpenbaring).
+- Header flyter over hero (transparent → solid ved scroll), uten boks på
+  innsiden; aktiv side markeres med kobber.
+- Hero: fullbredde foto, innrykket andre linje i overskriften,
+  translusent «spesifikasjonskort» (adresse/tider/telefon/svar) på desktop,
+  kompakt faktastripe på mobil.
+- Forside-rytme: hero → spesifikasjonsliste med priser → fullbredde
+  verksted-bånd (skum) → veiledning → før/etter (fullbredde 16:7) →
+  lakk/coating-spredning med skjæremerke → tett prisseksjon → prosess som
+  bilde-rad (4 kvadratiske arbeidsbilder) → kuraterte prosjekter → lokasjon →
+  CTA.
+- Tjenestesiden: kapitler med fullbredde kategoribilder + progressive
+  disclosure (details/summary); keramisk coating og PPF åpne som standard.
+- Priser: Barlow-priser i spesifikasjonsrader.
+- Teknisk: `Astro.url.pathname` inkluderer base-sti — hjemme-/aktiv-deteksjon
+  normalisert med `BASE_URL`; QA kjøres med `BASE_URL` mot base-stien.

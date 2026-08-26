@@ -1,37 +1,53 @@
 ---
-import type { Service } from '../data/site';
-
-interface Props {
-  items: Service[];
-}
-
-const { items } = Astro.props;
+import { categories, services } from '../data/site';
 ---
 
-<!-- Tjenesteindeks: høy informasjonstetthet, pris synlig med én gang -->
+<!-- Tjenesteliste i spesifikasjonsformat — tett, pris synlig -->
 <div>
+  <nav
+    class="flex flex-wrap gap-x-8 gap-y-2 border-b border-line pb-3"
+    aria-label="Tjenestekategorier"
+  >
+    {
+      categories.map((c) => (
+        <a
+          href={`#cat-${c.id}`}
+          class="micro transition-colors hover:text-copper"
+        >
+          {c.label}
+        </a>
+      ))
+    }
+  </nav>
+
   {
-    items.map((s) => (
-      <a
-        href={`/tjenester#${s.slug}`}
-        class="group grid grid-cols-1 items-baseline gap-x-8 gap-y-1.5 border-t border-line py-5 transition-colors sm:grid-cols-[1fr_auto]"
-      >
-        <div class="min-w-0">
-          <h3 class="font-display text-[1.4rem] font-semibold leading-tight text-ink transition-colors group-hover:text-copper">
-            {s.name}
-          </h3>
-          <p class="mt-1 max-w-xl text-sm leading-relaxed text-steel">{s.short}</p>
+    categories.map((c) => {
+      const items = services.filter((s) => s.category === c.id);
+      return (
+        <div id={`cat-${c.id}`} class="scroll-mt-20">
+          <p class="micro mb-1 mt-9 text-copper-deep">{c.label}</p>
+          {items.map((s) => (
+            <a
+              href={`/tjenester#${s.slug}`}
+              class="group grid grid-cols-1 items-baseline gap-x-8 gap-y-1 border-t border-line py-3.5 transition-colors hover:bg-paper-2/60 sm:grid-cols-[1fr_auto]"
+            >
+              <div class="min-w-0">
+                <h3 class="font-display text-[1.5rem] font-semibold leading-tight transition-colors group-hover:text-copper">
+                  {s.name}
+                </h3>
+                <p class="mt-0.5 text-sm leading-relaxed text-steel">{s.short}</p>
+              </div>
+              <div class="flex flex-wrap items-baseline gap-x-6 gap-y-0.5 sm:flex-col sm:items-end sm:gap-y-0">
+                <span class="text-xs text-steel">{s.duration}</span>
+                <span class="font-display text-[1.35rem] font-semibold tabular">
+                  {s.priceFrom}
+                </span>
+              </div>
+            </a>
+          ))}
         </div>
-        <div class="flex flex-wrap items-baseline gap-x-4 gap-y-0.5 sm:flex-col sm:items-end">
-          <span class="tabular text-[17px] font-semibold text-ink">{s.priceFrom}</span>
-          <span class="text-xs text-steel">
-            {s.duration}
-            <span aria-hidden="true"> · </span>
-            {s.booking === 'direct' ? 'Bestill direkte' : 'Prisoverslag'}
-          </span>
-        </div>
-      </a>
-    ))
+      );
+    })
   }
   <p class="border-b border-line" aria-hidden="true"></p>
 </div>
