@@ -1,5 +1,6 @@
 // Sentral bildeimport for Astro Image-optimalisering.
-// Se docs/image-sources.md for kilder, lisens og kreditering.
+// Alt-tekster er lokalisert og ligger i src/i18n/ (content.alt).
+// Se docs/image-sources.md for kilder og lisens.
 import hero from '../assets/img/hero.jpg';
 import paint from '../assets/img/paint.jpg';
 import wash from '../assets/img/wash.jpg';
@@ -24,15 +25,4 @@ export const images = {
   road,
 };
 
-export const imageAlt: Record<string, string> = {
-  hero: 'Mørk bil med frontlysene på i et parkeringshus',
-  paint: 'Polert mørk bil — eksempel på lakkarbeid',
-  wash: 'Bil som håndvaskes ved et bilpleieanlegg',
-  foam: 'Aktivt skum på bil under vask',
-  pressure: 'Høytrykksvask av mørk bil',
-  interior: 'Bilinteriør i mørke toner',
-  wheel: 'Felg på bil, nærbilde',
-  ppf: 'Montering av PPF-film på bilpanser',
-  garage: 'Mørk sportsbil parkert i garasje',
-  road: 'Klassisk sportsbil på vei',
-};
+export type ImageKey = keyof typeof images;

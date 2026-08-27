@@ -1,0 +1,307 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { withBase } from '../utils/links';
+import { images } from '../data/images';
+import { site, sizePrices } from '../data/site';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+import CatalogueOverview from '../components/CatalogueOverview.astro';
+import CarGuide from '../components/CarGuide.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import MapsBlock from '../components/MapsBlock.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+
+const miniSizes = t.sizeClasses.slice(0, 3);
+const miniRows = ['exterior-care', 'interior-deep-clean', 'full-detail'];
+const miniNames = Object.fromEntries(t.services.map((s) => [s.slug, s.name]));
+
+const workSel = ['pressure', 'road', 'wheel'];
+const workItems = t.work.items.filter((w) => workSel.includes(w.image));
+const workSpans = ['lg:col-span-12', 'lg:col-span-7', 'lg:col-span-5'];
+---
+
+<Base locale={locale} page="home" enPath="/">
+  <!-- ============ HERO — arbeid i verkstedet ============ -->
+  <section class="relative flex min-h-[92svh] items-end overflow-hidden bg-ink">
+    <Image
+      src={images.ppf}
+      widths={[640, 1024, 1600, 2400]}
+      sizes="100vw"
+      alt={t.alt.ppf}
+      class="absolute inset-0 h-full w-full object-cover object-center"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/35 to-ink/15"
+      aria-hidden="true"
+    ></div>
+
+    <div class="wrap relative z-10 w-full pb-14 pt-36">
+      <div class="grid items-end gap-10 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
+        <div>
+          <p class="micro micro--dark">{t.hero.kicker}</p>
+          <h1 class="display-hero mt-5 text-paper">
+            {t.hero.titleA}
+            <br />
+            <span class="ml-[0.5ch]">{t.hero.titleB}</span>
+          </h1>
+          <p class="mt-7 max-w-lg text-[15px] leading-relaxed text-paper/75">
+            {t.hero.sub}
+          </p>
+          <div class="mt-9 flex flex-wrap gap-3">
+            <a href={withBase(toLocalePath(locale, '/book'))} class="btn-primary-dark">
+              {t.hero.ctaPrimary}
+            </a>
+            <a href={withBase(toLocalePath(locale, '/book') + '#quote')} class="btn-secondary-dark">
+              {t.hero.ctaSecondary}
+            </a>
+          </div>
+          <p class="mt-8 flex flex-wrap gap-x-6 gap-y-1.5 text-xs text-paper/70 lg:hidden">
+            <span>{t.hero.spec[0].value}</span>
+            <span>{t.hero.spec[1].value}</span>
+            <a
+              href={site.phone.href}
+              class="font-semibold text-paper transition-colors hover:text-copper-soft"
+            >
+              {t.hero.spec[2].value}
+            </a>
+          </p>
+        </div>
+
+        <dl class="hidden border border-paper/25 bg-ink/40 p-7 backdrop-blur-sm lg:block">
+          {
+            t.hero.spec.map((row) => (
+              <div class="grid grid-cols-[110px_1fr] gap-4 border-b border-paper/15 py-2.5 text-sm last:border-b-0">
+                <dt class="micro micro--dark">{row.label}</dt>
+                <dd class="text-paper/85">
+                  {row.href ? (
+                    <a href={row.href} class="transition-colors hover:text-copper-soft">
+                      {row.value}
+                    </a>
+                  ) : (
+                    row.value
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATEMENT — redaksjonell posisjon ============ -->
+  <section class="wrap py-16 sm:py-24">
+    <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+      <h2 class="display-xl max-w-4xl lg:col-span-8">
+        {t.statement.title}
+      </h2>
+      <div class="lg:col-span-4 lg:pt-2">
+        <p class="text-[15px] leading-relaxed text-steel">{t.statement.text}</p>
+        <a href={withBase(toLocalePath(locale, '/workshop'))} class="link-plain mt-6 inline-block">
+          {t.statement.link}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BEHANDLINGER — katalogoversikt ============ -->
+  <section class="border-t border-line bg-paper-2/50">
+    <div class="wrap py-16 sm:py-24">
+      <div class="mb-10 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div>
+          <p class="micro">{t.catalogue.kicker}</p>
+          <h2 class="display-xl mt-3">{t.catalogue.title}</h2>
+        </div>
+        <a href={withBase(toLocalePath(locale, '/services'))} class="link-plain lg:mb-2">
+          {t.ui.allServices}
+        </a>
+      </div>
+      <CatalogueOverview locale={locale} />
+    </div>
+  </section>
+
+  <!-- ============ VEILEDNING ============ -->
+  <section class="bg-concrete">
+    <div class="wrap py-16 sm:py-20">
+      <div class="mb-10 max-w-2xl">
+        <p class="micro">{t.guide.kicker}</p>
+        <h2 class="display-xl mt-3">{t.guide.title}</h2>
+        <p class="mt-4 text-sm leading-relaxed text-steel">{t.guide.sub}</p>
+      </div>
+      <CarGuide locale={locale} />
+    </div>
+  </section>
+
+  <!-- ============ UTVALGTE ARBEIDER ============ -->
+  <section class="wrap py-16 sm:py-24">
+    <div class="mb-10 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div>
+        <p class="micro">{t.work.kicker}</p>
+        <h2 class="display-xl mt-3">{t.work.title}</h2>
+      </div>
+      <a href={withBase(toLocalePath(locale, '/work'))} class="link-plain lg:mb-2">
+        {t.work.link}
+      </a>
+    </div>
+    <div class="grid gap-6 lg:grid-cols-12">
+      {
+        workItems.map((w, i) => (
+          <figure class={workSpans[i]}>
+            <div class="overflow-hidden">
+              <Image
+                src={images[w.image]}
+                widths={[640, 1024, 1600]}
+                sizes="(max-width: 640px) 100vw, 60vw"
+                alt={t.alt[w.image]}
+                class:list={['w-full object-cover', w.cls]}
+                loading="lazy"
+              />
+            </div>
+            <figcaption class="mt-2.5 flex items-baseline justify-between gap-4 text-sm">
+              <span class="font-medium">{w.title}</span>
+              <span class="text-right text-xs text-steel">{w.note}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ============ FØR / ETTER — signatur ============ -->
+  <section id="before-after" class="scroll-mt-16 bg-ink py-20 sm:py-28">
+    <div class="wrap mb-10 max-w-2xl">
+      <p class="label-rule label-rule--dark">{t.beforeAfter.kicker}</p>
+      <h2 class="display-xl mt-4 text-paper">{t.beforeAfter.title}</h2>
+      <p class="mt-4 text-sm leading-relaxed text-paper/60">{t.beforeAfter.sub}</p>
+    </div>
+    <BeforeAfter locale={locale} />
+  </section>
+
+  <!-- ============ VERKSTEDET — narrativ ============ -->
+  <section class="wrap py-16 sm:py-24">
+    <div class="mb-10 grid gap-8 lg:grid-cols-12 lg:items-end">
+      <div class="lg:col-span-7">
+        <p class="micro">{t.narrative.kicker}</p>
+        <h2 class="display-xl mt-3">{t.narrative.title}</h2>
+        <p class="mt-5 max-w-xl text-[15px] leading-relaxed text-steel">
+          {t.narrative.text}
+        </p>
+        <a href={withBase(toLocalePath(locale, '/workshop'))} class="link-plain mt-6 inline-block">
+          {t.narrative.link}
+        </a>
+      </div>
+      <p class="lg:col-span-5 lg:text-right">
+        <span class="font-display text-6xl font-semibold leading-none text-copper">04</span>
+        <span class="ml-3 text-sm text-steel">{t.narrative.steps[3].label}</span>
+      </p>
+    </div>
+    <div class="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+      {
+        t.narrative.steps.map((st) => (
+          <figure class="relative aspect-square overflow-hidden">
+            <Image
+              src={images[st.image]}
+              widths={[320, 640, 1024]}
+              sizes="(max-width: 640px) 50vw, 25vw"
+              alt={t.alt[st.image]}
+              class="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+            />
+            <figcaption class="absolute inset-x-0 bottom-0 bg-ink/70 px-3 py-2.5 backdrop-blur-[2px]">
+              <span class="block text-[10px] font-semibold uppercase tracking-[0.18em] text-copper-soft">
+                {st.id} · {st.label}
+              </span>
+              <span class="block text-xs text-paper/75">{st.note}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ============ PRISER — tett ============ -->
+  <section class="border-y border-line bg-concrete">
+    <div class="wrap py-12 sm:py-14">
+      <div class="grid gap-10 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="micro">{t.pricing.kicker}</p>
+          <h2 class="display-xl mt-3">{t.pricing.title}</h2>
+          <p class="mt-4 max-w-md text-sm leading-relaxed text-steel">{t.pricing.sub}</p>
+          <div class="mt-7 flex flex-wrap items-center gap-5">
+            <a href={withBase(toLocalePath(locale, '/pricing'))} class="btn-primary">
+              {t.pricing.ctaList}
+            </a>
+            <a href={withBase(toLocalePath(locale, '/book') + '#quote')} class="link-plain">
+              {t.pricing.ctaQuote}
+            </a>
+          </div>
+          <p class="mt-6 max-w-md text-xs leading-relaxed text-steel">
+            {t.pricing.disclaimer}
+          </p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-sm">
+            <caption class="sr-only">{t.pricing.tableCaption}</caption>
+            <thead>
+              <tr class="border-b border-line text-left">
+                <th scope="col" class="pb-2.5 pr-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-steel">
+                  {t.pricing.tableService}
+                </th>
+                {miniSizes.map((s) => (
+                  <th scope="col" class="pb-2.5 pr-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-steel">
+                    {s}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {miniRows.map((slug) => (
+                <tr class="border-b border-line">
+                  <th scope="row" class="py-3 pr-3 font-medium text-ink">
+                    {miniNames[slug]}
+                  </th>
+                  {(sizePrices[slug] ?? []).slice(0, 3).map((p) => (
+                    <td class="py-3 pr-3 font-display text-lg tabular">{p}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="mt-3 text-xs text-steel">
+            {t.pricing.tableNote}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LOKASJON ============ -->
+  <MapsBlock locale={locale} />
+
+  <!-- ============ SISTE CTA ============ -->
+  <section class="bg-ink">
+    <div class="wrap flex flex-col gap-8 py-14 sm:py-16 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="display-xl text-paper">{t.finalCta.title}</h2>
+        <p class="mt-4 text-sm leading-relaxed text-paper/65">{t.finalCta.text}</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-6">
+        <a href={withBase(toLocalePath(locale, '/book'))} class="btn-primary-dark">
+          {t.ui.book}
+        </a>
+        <a href={site.phone.href} class="link-plain-dark">
+          {site.phone.display}
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

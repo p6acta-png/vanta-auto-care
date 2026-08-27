@@ -1,0 +1,164 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { withBase } from '../utils/links';
+import { images, type ImageKey } from '../data/images';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+import { Check } from '@lucide/astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+
+const catImage: Record<string, ImageKey> = {
+  exterior: 'wash',
+  interior: 'interior',
+  paint: 'paint',
+  protection: 'ppf',
+};
+---
+
+<Base locale={locale} page="services" enPath="/services">
+  <section class="wrap py-14 sm:py-20">
+    <p class="micro">{t.catalogue.kicker}</p>
+    <h1 class="h-display mt-4 max-w-3xl">{t.catalogue.title}</h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">{t.catalogue.intro}</p>
+  </section>
+
+  <nav class="wrap -mt-5 flex gap-9 overflow-x-auto border-b border-line pb-4" aria-label={t.catalogue.kicker}>
+    {
+      t.categories.map((c) => (
+        <a href={withBase(toLocalePath(locale, '/services') + `#cat-${c.id}`)} class="micro shrink-0 transition-colors hover:text-copper">
+          {c.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <!-- ============ KATEGORIER — bilde-ledet katalog ============ -->
+  {
+    t.categories.map((c) => {
+      const items = t.services.filter((s) => s.category === c.id);
+      const key = catImage[c.id];
+      return (
+        <section id={`cat-${c.id}`} class="scroll-mt-16">
+          <div class="wrap grid gap-10 py-14 sm:py-16 lg:grid-cols-12 lg:gap-0">
+            <figure class="relative overflow-hidden lg:col-span-5">
+              <Image
+                src={images[key]}
+                widths={[640, 1024]}
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                alt={t.alt[key]}
+                class="aspect-[4/5] w-full object-cover"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" aria-hidden="true"></div>
+              <figcaption class="absolute inset-x-0 bottom-0 p-6">
+                <p class="micro micro--dark">{c.desc}</p>
+                <p class="mt-1.5 font-display text-5xl font-semibold leading-none text-paper">{c.label}</p>
+              </figcaption>
+            </figure>
+
+            <div class="lg:col-span-7 lg:pl-14">
+              {
+                items.map((s) => (
+                  <article id={s.slug} class="scroll-mt-20 border-b border-line">
+                    <div class="grid gap-3 py-5 sm:grid-cols-[1fr_auto] sm:items-baseline">
+                      <div class="min-w-0">
+                        <h2 class="font-display text-[1.6rem] font-semibold leading-tight sm:text-[1.8rem]">
+                          {s.name}
+                        </h2>
+                        <p class="mt-1 text-sm leading-relaxed text-steel">{s.short}</p>
+                      </div>
+                      <div class="flex flex-wrap items-baseline gap-x-5 gap-y-0.5 sm:flex-col sm:items-end sm:gap-y-0.5">
+                        <span class="text-xs text-steel">{s.duration}</span>
+                        <span class="font-display text-[1.4rem] font-semibold tabular">{s.priceFrom}</span>
+                        <span class="micro text-copper-deep">
+                          {s.booking === 'direct' ? t.form.optDirect : t.form.optQuote}
+                        </span>
+                      </div>
+                    </div>
+
+                    <details class="pb-5">
+                      <summary class="micro cursor-pointer list-none text-copper-deep transition-colors hover:text-copper [&::-webkit-details-marker]:hidden">
+                        {t.ui.details}
+                      </summary>
+                      <div class="grid gap-8 pt-4 sm:grid-cols-2">
+                        <div>
+                          <p class="micro mb-2">{t.catalogue.bestFor}</p>
+                          <p class="text-sm leading-relaxed text-steel">{s.suitedFor}</p>
+                        </div>
+                        <div>
+                          <p class="micro mb-2">{t.catalogue.included}</p>
+                          <ul class="space-y-2">
+                            {s.includes.map((inc) => (
+                              <li class="flex items-start gap-2.5 text-sm">
+                                <Check class="mt-0.5 h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
+                                {inc}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="mt-6 flex flex-wrap items-center gap-5">
+                        {s.booking === 'direct' ? (
+                          <a href={withBase(toLocalePath(locale, '/book') + `?service=${s.slug}`)} class="btn-primary">
+                            {t.ui.book}
+                          </a>
+                        ) : (
+                          <a href={withBase(toLocalePath(locale, '/book') + '#quote')} class="btn-primary">
+                            {t.ui.quote}
+                          </a>
+                        )}
+                        <a href={withBase(toLocalePath(locale, '/pricing'))} class="link-plain">
+                          {t.catalogue.seePricing}
+                        </a>
+                      </div>
+                    </details>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <!-- ============ PREMIUM-BÅND ============ -->
+  <section class="bg-ink">
+    <div class="wrap grid gap-10 py-16 sm:py-20 lg:grid-cols-12 lg:items-center">
+      <div class="lg:col-span-6">
+        <p class="micro micro--dark">{t.catalogue.premiumKicker}</p>
+        <h2 class="display-xl mt-3 text-paper">{t.catalogue.premiumTitle}</h2>
+        <p class="mt-4 max-w-lg text-[15px] leading-relaxed text-paper/65">
+          {t.catalogue.premiumText}
+        </p>
+        <a href={withBase(toLocalePath(locale, '/book') + '#quote')} class="btn-primary-dark mt-8">
+          {t.catalogue.premiumCta}
+        </a>
+      </div>
+      <figure class="lg:col-span-6">
+        <div class="overflow-hidden">
+          <Image
+            src={images.paint}
+            widths={[640, 1024, 1600]}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            alt={t.alt.paint}
+            class="aspect-[16/10] w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="mt-2.5 text-[11px] uppercase tracking-[0.16em] text-paper/50">
+          {t.alt.paint}
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <p class="wrap py-8 text-xs text-steel/70">{t.pricing.demoNote}</p>
+</Base>

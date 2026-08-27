@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../utils/links';
+import { site } from '../data/site';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+import BookingForm from '../components/BookingForm.astro';
+import { Phone } from '@lucide/astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+const bp = t.bookPage;
+---
+
+<Base locale={locale} page="book" enPath="/book">
+  <section class="wrap py-14 sm:py-20">
+    <p class="micro">{bp.kicker}</p>
+    <h1 class="h-display mt-4 max-w-3xl">{bp.title}</h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">{bp.intro}</p>
+  </section>
+
+  <!-- ============ TO VEIER ============ -->
+  <section class="wrap pb-14 sm:pb-16">
+    <div class="grid gap-x-14 lg:grid-cols-2">
+      <div class="border-t border-line py-6">
+        <p class="micro text-copper-deep">{bp.path1Kicker}</p>
+        <h2 class="h-lede mt-3">{bp.path1Title}</h2>
+        <p class="mt-3 max-w-md text-sm leading-relaxed text-steel">{bp.path1Text}</p>
+      </div>
+      <div class="border-t border-line py-6">
+        <p class="micro text-copper-deep">{bp.path2Kicker}</p>
+        <h2 class="h-lede mt-3">{bp.path2Title}</h2>
+        <p class="mt-3 max-w-md text-sm leading-relaxed text-steel">{bp.path2Text}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKJEMA + SIDEBAR ============ -->
+  <section class="border-t border-line bg-paper-2/50">
+    <div class="wrap grid gap-12 py-16 sm:py-20 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+      <div>
+        <p class="micro">{bp.processKicker}</p>
+        <h2 class="display-xl mt-3">{bp.processTitle}</h2>
+        <ol class="mt-9">
+          {
+            t.processSteps.map((p) => (
+              <li class="grid grid-cols-[48px_1fr] gap-4 border-t border-line py-4">
+                <span class="font-display text-2xl font-semibold leading-none text-copper">{p.step}</span>
+                <p class="text-sm leading-relaxed text-steel">
+                  <span class="font-semibold text-ink">{p.title}.</span> {p.text}
+                </p>
+              </li>
+            ))
+          }
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </ol>
+        <div class="mt-8 flex flex-wrap items-center gap-4 text-sm">
+          <span class="text-steel">{bp.callPrompt}</span>
+          <a
+            href={site.phone.href}
+            class="inline-flex items-center gap-2 font-semibold transition-colors hover:text-copper"
+          >
+            <Phone class="h-4 w-4 text-copper" aria-hidden="true" />
+            {site.phone.display}
+          </a>
+        </div>
+      </div>
+
+      <BookingForm locale={locale} />
+    </div>
+  </section>
+
+  <!-- ============ BUNN ============ -->
+  <section class="bg-ink">
+    <div class="wrap flex flex-col gap-6 py-14 sm:flex-row sm:items-center sm:justify-between">
+      <p class="max-w-xl text-[15px] leading-relaxed text-paper/75">{bp.bottomText}</p>
+      <a href={withBase(toLocalePath(locale, '/faq'))} class="link-plain-dark shrink-0">FAQ</a>
+    </div>
+  </section>
+</Base>

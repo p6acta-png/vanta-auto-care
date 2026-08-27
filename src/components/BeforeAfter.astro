@@ -1,17 +1,25 @@
 ---
 import { Image } from 'astro:assets';
 import { images } from '../data/images';
+import { type Locale } from '../i18n';
+import { getContent } from '../i18n/content';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+const ba = t.beforeAfter;
 ---
 
-<!-- Før/etter — sentralt visuelt bevis.
-     Før-siden er simulert (CSS-filter) og tydelig merket som eksempel.
-     Mus, touch og tastatur (range-input). -->
+<!-- Før/etter — signatur. Før-siden er simulert og merket. -->
 <figure class="beforeafter relative aspect-[4/3] w-full select-none overflow-hidden bg-ink sm:aspect-[16/7]">
   <Image
     src={images.paint}
-    alt="Polert mørk bil — etter"
+    alt={t.alt.paint + ' — ' + ba.labelAfter.toLowerCase()}
     widths={[480, 800, 1280, 1600]}
-    sizes="(max-width: 640px) 100vw, 1152px"
+    sizes="(max-width: 640px) 100vw, 1240px"
     class="absolute inset-0 h-full w-full object-cover"
     loading="lazy"
   />
@@ -21,17 +29,17 @@ import { images } from '../data/images';
       src={images.paint}
       alt=""
       widths={[480, 800, 1280, 1600]}
-      sizes="(max-width: 640px) 100vw, 1152px"
+      sizes="(max-width: 640px) 100vw, 1240px"
       class="absolute inset-0 h-full w-full object-cover"
       loading="lazy"
     />
   </div>
 
   <figcaption class="ba-label pointer-events-none absolute left-4 top-4 z-10 bg-ink/75 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-paper">
-    Før
+    {ba.labelBefore}
   </figcaption>
   <figcaption class="ba-label pointer-events-none absolute right-4 top-4 z-10 bg-copper px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-paper">
-    Etter
+    {ba.labelAfter}
   </figcaption>
 
   <div class="ba-divider pointer-events-none absolute bottom-0 top-0 z-10 w-px bg-paper" aria-hidden="true">
@@ -50,13 +58,10 @@ import { images } from '../data/images';
     max="100"
     value="50"
     class="ba-input absolute inset-0 z-20 h-full w-full cursor-ew-resize opacity-0"
-    aria-label="Sammenlign før og etter behandling"
+    aria-label={ba.sliderLabel}
   />
 </figure>
-<p class="mt-4 text-xs leading-relaxed text-steel">
-  Eksempel på resultat — lakkrens og polering. Før-bildet er simulert for å
-  illustrere forskjellen; dette er ikke en ekte kundebil.
-</p>
+<p class="mt-4 text-xs leading-relaxed text-steel">{ba.note}</p>
 
 <style>
   .beforeafter {

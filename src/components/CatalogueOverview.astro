@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import { withBase } from '../utils/links';
+import { images, type ImageKey } from '../data/images';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+
+const catImage: Record<string, ImageKey> = {
+  exterior: 'wash',
+  interior: 'interior',
+  paint: 'paint',
+  protection: 'ppf',
+};
+const spans = ['lg:col-span-7', 'lg:col-span-5', 'lg:col-span-5', 'lg:col-span-7'];
+const aspects = ['aspect-[16/10]', 'aspect-[4/5]', 'aspect-[4/5]', 'aspect-[16/10]'];
+---
+
+<!-- Katalogoversikt: bilde-ledede kategorier med priser synlig -->
+<div class="grid gap-10 lg:grid-cols-12 lg:gap-6">
+  {
+    t.categories.map((c, i) => {
+      const items = t.services.filter((s) => s.category === c.id);
+      const key = catImage[c.id];
+      return (
+        <a
+          href={withBase(toLocalePath(locale, '/services') + `#cat-${c.id}`)}
+          class:list={['group block', spans[i]]}
+        >
+          <figure class="relative overflow-hidden">
+            <Image
+              src={images[key]}
+              widths={[640, 1024, 1600]}
+              sizes="(max-width: 640px) 100vw, 50vw"
+              alt={t.alt[key]}
+              class:list={[
+                'w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]',
+                aspects[i],
+              ]}
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/15 to-transparent" aria-hidden="true"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+              <p class="micro micro--dark">{c.desc}</p>
+              <p class="mt-1.5 font-display text-4xl font-semibold leading-none text-paper sm:text-5xl">
+                {c.label}
+              </p>
+            </figcaption>
+          </figure>
+          <ul class="mt-4">
+            {
+              items.map((s) => (
+                <li class="flex items-baseline justify-between gap-4 border-b border-line py-2.5 text-sm">
+                  <span class="font-medium text-ink transition-colors group-hover:text-copper">
+                    {s.name}
+                  </span>
+                  <span class="font-display text-lg tabular text-steel">{s.priceFrom}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </a>
+      );
+    })
+  }
+</div>

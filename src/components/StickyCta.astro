@@ -1,7 +1,16 @@
 ---
 import { withBase } from '../utils/links';
 import { site } from '../data/site';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
 import { Phone } from '@lucide/astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
 ---
 
 <!-- Én tilbakeholden sticky CTA, kun på mobil -->
@@ -10,10 +19,12 @@ import { Phone } from '@lucide/astro';
   style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom))"
 >
   <div class="flex items-center gap-3">
-    <a href={withBase("/bestill-time")} class="btn-primary-dark flex-1 !py-3">Bestill time</a>
+    <a href={withBase(toLocalePath(locale, '/book'))} class="btn-primary-dark flex-1 !py-3">
+      {t.ui.book}
+    </a>
     <a
       href={site.phone.href}
-      aria-label={`Ring ${site.phone.display}`}
+      aria-label={site.phone.display}
       class="btn-secondary-dark !px-4"
     >
       <Phone class="h-5 w-5" aria-hidden="true" />

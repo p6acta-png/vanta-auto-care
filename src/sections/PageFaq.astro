@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../utils/links';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+import FaqList from '../components/FaqList.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+---
+
+<Base locale={locale} page="faq" enPath="/faq">
+  <section class="wrap py-14 sm:py-20">
+    <p class="micro">{t.faqPage.kicker}</p>
+    <h1 class="h-display mt-4 max-w-3xl">{t.faqPage.title}</h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">{t.faqPage.intro}</p>
+  </section>
+
+  <section class="wrap max-w-3xl pb-16 sm:pb-24">
+    <FaqList items={t.faqs} />
+
+    <div class="mt-12 flex flex-col gap-6 border-t border-line pt-10 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-ink">{t.faqPage.moreTitle}</h2>
+        <p class="mt-2 text-sm text-steel">{t.faqPage.moreText}</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href={withBase(toLocalePath(locale, '/book'))} class="btn-primary">{t.ui.book}</a>
+        <a href={withBase(toLocalePath(locale, '/book') + '#quote')} class="btn-secondary">{t.ui.quote}</a>
+      </div>
+    </div>
+  </section>
+</Base>

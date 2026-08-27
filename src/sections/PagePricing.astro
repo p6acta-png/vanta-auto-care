@@ -1,0 +1,142 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../utils/links';
+import { sizePrices } from '../data/site';
+import { type Locale, toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+const sizeRows = ['exterior-care', 'interior-deep-clean', 'full-detail', 'wheel-care'];
+const variable = t.services.filter((s) => !s.sizeDependent);
+const names = Object.fromEntries(t.services.map((s) => [s.slug, s.name]));
+const currency = locale === 'no' ? 'kr' : 'NOK';
+---
+
+<Base locale={locale} page="pricing" enPath="/pricing">
+  <section class="wrap py-14 sm:py-20">
+    <p class="micro">{t.pricing.kicker}</p>
+    <h1 class="h-display mt-4 max-w-3xl">{t.pricing.title}</h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">{t.pricing.sub}</p>
+    <p class="mt-5 inline-block border border-copper/40 bg-copper/10 px-3 py-1.5 text-xs font-medium text-copper-deep">
+      {t.pricing.demoNote}
+    </p>
+  </section>
+
+  <section class="wrap pb-16 sm:pb-24">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[620px] border-collapse text-sm">
+        <caption class="sr-only">{t.pricing.tableCaption}</caption>
+        <thead>
+          <tr class="border-b border-line text-left">
+            <th scope="col" class="pb-3 pr-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-steel">
+              {t.pricing.tableService}
+            </th>
+            {t.sizeClasses.map((s) => (
+              <th scope="col" class="pb-3 pr-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-steel">
+                {s}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {sizeRows.map((slug) => (
+            <tr class="border-b border-line">
+              <th scope="row" class="py-3.5 pr-4 font-medium text-ink">
+                <a href={withBase(toLocalePath(locale, '/services') + `#${slug}`)} class="transition-colors hover:text-copper">
+                  {names[slug]}
+                </a>
+              </th>
+              {(sizePrices[slug] ?? []).map((p) => (
+                <td class="py-3.5 pr-4 font-display text-lg tabular">
+                  {p ? `from ${p} ${currency}` : 'on request'}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <ul class="mt-8 border-t border-line">
+      {
+        variable.map((s) => (
+          <li>
+            <a
+              href={withBase(toLocalePath(locale, '/services') + `#${s.slug}`)}
+              class="group grid grid-cols-1 items-baseline gap-x-8 gap-y-1 border-b border-line py-3.5 transition-colors hover:bg-paper-2/60 sm:grid-cols-[1fr_auto]"
+            >
+              <span class="font-medium text-ink transition-colors group-hover:text-copper">{s.name}</span>
+              <span class="flex flex-wrap items-baseline gap-x-6 gap-y-0.5 sm:flex-col sm:items-end sm:gap-y-0">
+                <span class="text-xs text-steel">{s.duration}</span>
+                <span class="font-display text-[1.3rem] font-semibold tabular">{s.priceFrom}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-6 text-sm leading-relaxed text-steel">{t.pricing.disclaimer}</p>
+  </section>
+
+  <!-- ============ HVA PÅVIRKER PRISEN ============ -->
+  <section class="border-t border-line bg-concrete">
+    <div class="wrap py-14 sm:py-16">
+      <div class="grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-20">
+        <div>
+          <p class="micro">{t.pricing.factorsKicker}</p>
+          <h2 class="display-xl mt-3">{t.pricing.factorsTitle}</h2>
+          <p class="mt-4 max-w-md text-sm leading-relaxed text-steel">{t.pricing.sizeNote}</p>
+        </div>
+        <div>
+          {
+            t.priceFactors.map((f) => (
+              <div class="grid gap-1 border-t border-line py-4 sm:grid-cols-[220px_1fr] sm:gap-8">
+                <h3 class="text-base font-semibold text-ink">{f.title}</h3>
+                <p class="text-sm leading-relaxed text-steel">{f.text}</p>
+              </div>
+            ))
+          }
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIK FÅR DU EN PRIS ============ -->
+  <section class="wrap py-16 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
+      <div>
+        <p class="micro">{t.bookPage.processKicker}</p>
+        <h2 class="display-xl mt-3">{t.bookPage.processTitle}</h2>
+        <ol class="mt-8">
+          {
+            t.processSteps.map((p) => (
+              <li class="grid grid-cols-[52px_1fr] gap-5 border-t border-line py-4">
+                <span class="font-display text-3xl font-semibold leading-none text-copper">{p.step}</span>
+                <p class="text-[15px] leading-relaxed text-steel">
+                  <span class="font-semibold text-ink">{p.title}.</span> {p.text}
+                </p>
+              </li>
+            ))
+          }
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </ol>
+      </div>
+
+      <div class="flex flex-col justify-center">
+        <h3 class="text-xl font-semibold text-ink">{t.ui.quote}</h3>
+        <p class="mt-3 max-w-md text-sm leading-relaxed text-steel">{t.finalCta.text}</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href={withBase(toLocalePath(locale, '/book') + '#quote')} class="btn-primary">{t.ui.quote}</a>
+          <a href={withBase(toLocalePath(locale, '/faq'))} class="btn-secondary">FAQ</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

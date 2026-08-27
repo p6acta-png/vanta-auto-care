@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { withBase } from '../utils/links';
+import { images } from '../data/images';
+import { site } from '../data/site';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+import MapsBlock from '../components/MapsBlock.astro';
+import { Phone } from '@lucide/astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+const wp = t.workshopPage;
+---
+
+<Base locale={locale} page="workshop" enPath="/workshop">
+  <section class="wrap py-14 sm:py-20">
+    <p class="micro">{wp.kicker}</p>
+    <h1 class="h-display mt-4 max-w-3xl">{wp.title}</h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">{wp.intro}</p>
+  </section>
+
+  <!-- ============ NARRATIV I BILDER ============ -->
+  <section class="wrap pb-16 sm:pb-24">
+    <div class="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+      {
+        t.narrative.steps.map((st) => (
+          <figure class="relative aspect-square overflow-hidden">
+            <Image
+              src={images[st.image]}
+              widths={[320, 640, 1024]}
+              sizes="(max-width: 640px) 50vw, 25vw"
+              alt={t.alt[st.image]}
+              class="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+            />
+            <figcaption class="absolute inset-x-0 bottom-0 bg-ink/70 px-3 py-2.5 backdrop-blur-[2px]">
+              <span class="block text-[10px] font-semibold uppercase tracking-[0.18em] text-copper-soft">
+                {st.id} · {st.label}
+              </span>
+              <span class="block text-xs text-paper/75">{st.note}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <p class="mt-8 max-w-2xl text-[15px] leading-relaxed text-steel">{t.narrative.text}</p>
+  </section>
+
+  <!-- ============ PRINSIPPER ============ -->
+  <section class="border-t border-line bg-concrete">
+    <div class="wrap py-14 sm:py-16">
+      <div class="grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-20">
+        <div>
+          <p class="micro">{wp.principlesKicker}</p>
+          <h2 class="display-xl mt-3">{wp.principlesTitle}</h2>
+        </div>
+        <div>
+          {
+            wp.principles.map((p) => (
+              <div class="grid gap-1 border-t border-line py-4 sm:grid-cols-[220px_1fr] sm:gap-8">
+                <h3 class="text-base font-semibold text-ink">{p.title}</h3>
+                <p class="text-sm leading-relaxed text-steel">{p.text}</p>
+              </div>
+            ))
+          }
+          <p class="border-b border-line" aria-hidden="true"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BESØK ============ -->
+  <MapsBlock locale={locale} />
+
+  <!-- ============ CTA ============ -->
+  <section class="bg-ink">
+    <div class="wrap flex flex-col gap-8 py-14 sm:py-16 lg:flex-row lg:items-center lg:justify-between">
+      <h2 class="display-xl max-w-2xl text-paper">{t.finalCta.title}</h2>
+      <div class="flex flex-wrap items-center gap-6">
+        <a href={withBase(toLocalePath(locale, '/book'))} class="btn-primary-dark">{t.ui.book}</a>
+        <a href={site.phone.href} class="link-plain-dark">
+          <Phone class="mr-1 inline h-4 w-4" aria-hidden="true" />
+          {site.phone.display}
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

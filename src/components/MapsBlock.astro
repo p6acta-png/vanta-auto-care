@@ -1,44 +1,48 @@
 ---
 import { site } from '../data/site';
-import { Phone } from '@lucide/astro';
+import { type Locale } from '../i18n';
+import { getContent } from '../i18n/content';
+import { Phone, Clock } from '@lucide/astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+const wp = t.workshopPage;
 ---
 
 <section class="wrap py-20 sm:py-24">
   <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
     <div>
-      <p class="label-rule">Lokasjon</p>
-      <h2 class="h-section mt-3">Nydalen, Oslo</h2>
-      <p class="mt-5 max-w-md text-[15px] leading-relaxed text-steel">
-        Verkstedet ligger i Nydalen, med parkering på egen tomt. Lever bilen om
-        morgenen — de fleste behandlinger er ferdige samme dag.
-      </p>
+      <p class="micro">{wp.visitKicker}</p>
+      <h2 class="display-xl mt-3">{wp.visitTitle}</h2>
+      <p class="mt-4 max-w-md text-sm leading-relaxed text-steel">{wp.visitText}</p>
 
-      <dl class="mt-10 max-w-md">
-        <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
-          <dt class="text-steel">Adresse</dt>
-          <dd class="font-medium text-ink">
-            {site.address.street}, {site.address.postal}
-          </dd>
+      <dl class="mt-9 max-w-md">
+        <div class="grid grid-cols-[110px_1fr] gap-4 border-t border-line py-3 text-sm">
+          <dt class="micro">{t.hero.spec[0].label}</dt>
+          <dd class="font-medium">{t.hero.spec[0].value}</dd>
         </div>
-        <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
-          <dt class="text-steel">Åpningstider</dt>
-          <dd class="space-y-1 text-steel">
-            {site.hours.map((h) => (
-              <p class="tabular">{h.label}: {h.value}</p>
-            ))}
-          </dd>
+        <div class="grid grid-cols-[110px_1fr] gap-4 border-t border-line py-3 text-sm">
+          <dt class="micro">{t.hero.spec[1].label}</dt>
+          <dd class="tabular">{t.hero.spec[1].value}</dd>
         </div>
-        <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
-          <dt class="text-steel">Parkering</dt>
-          <dd class="text-steel">{site.parking}</dd>
-        </div>
-        <div class="grid grid-cols-[130px_1fr] gap-4 border-t border-line py-3.5 text-sm">
-          <dt class="text-steel">Telefon</dt>
+        <div class="grid grid-cols-[110px_1fr] gap-4 border-t border-line py-3 text-sm">
+          <dt class="micro">{t.hero.spec[2].label}</dt>
           <dd>
-            <a href={site.phone.href} class="inline-flex items-center gap-2 font-medium text-ink transition-colors hover:text-copper">
+            <a href={site.phone.href} class="inline-flex items-center gap-2 font-medium transition-colors hover:text-copper">
               <Phone class="h-4 w-4 text-copper" aria-hidden="true" />
               {site.phone.display}
             </a>
+          </dd>
+        </div>
+        <div class="grid grid-cols-[110px_1fr] gap-4 border-t border-line py-3 text-sm">
+          <dt class="micro">{t.hero.spec[3].label}</dt>
+          <dd class="flex items-start gap-2">
+            <Clock class="mt-0.5 h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
+            <span>{t.hero.spec[3].value}</span>
           </dd>
         </div>
         <p class="border-b border-line" aria-hidden="true"></p>
@@ -48,8 +52,8 @@ import { Phone } from '@lucide/astro';
     <div class="flex flex-col">
       <div class="flex flex-1 flex-col justify-between bg-ink p-8 sm:p-10">
         <div>
-          <p class="label-rule label-rule--dark">Verkstedet</p>
-          <p class="mt-7 font-display text-3xl font-semibold leading-tight text-paper sm:text-4xl">
+          <p class="micro micro--dark">VANTA Auto Care</p>
+          <p class="mt-6 font-display text-3xl font-semibold leading-tight text-paper sm:text-4xl">
             {site.address.street}
           </p>
           <p class="mt-1 text-lg text-paper/70">{site.address.postal}</p>
@@ -61,7 +65,7 @@ import { Phone } from '@lucide/astro';
             rel="noopener"
             class="btn-primary-dark"
           >
-            Åpne i Google Maps
+            {t.ui.mapsGoogle}
           </a>
           <a
             href={site.maps.apple}
@@ -69,13 +73,11 @@ import { Phone } from '@lucide/astro';
             rel="noopener"
             class="btn-secondary-dark"
           >
-            Apple Kart
+            {t.ui.mapsApple}
           </a>
         </div>
       </div>
-      <p class="mt-3 text-xs text-steel">
-        Kartlenkene er klargjort for ekte kart-integrasjon i en senere versjon.
-      </p>
+      <p class="mt-3 text-xs text-steel">{t.ui.mapNote}</p>
     </div>
   </div>
 </section>

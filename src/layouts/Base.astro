@@ -7,62 +7,123 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StickyCta from '../components/StickyCta.astro';
+import { withBase } from '../utils/links';
 import { site } from '../data/site';
+import { type Locale } from '../i18n';
+import { getContent } from '../i18n/content';
+import { absUrl, langUrls } from '../i18n';
 
 interface Props {
-  title: string;
-  description: string;
-  jsonLd?: string;
+  locale: Locale;
+  page: string; // nøkkel i content.meta
+  enPath: string; // EN-sti for hreflang/canonical (f.eks. '/services' eller '/')
 }
 
-const { title, description, jsonLd } = Astro.props;
-const origin = Astro.site ?? site.url;
-const basePath = import.meta.env.BASE_URL.endsWith('/')
-  ? import.meta.env.BASE_URL
-  : import.meta.env.BASE_URL + '/';
-const canonical = new URL(Astro.url.pathname, origin).toString();
-const ogImage = new URL(basePath + 'og-image.jpg', origin).toString();
-const faviconHref = basePath + 'favicon.svg';
-const manifestHref = basePath + 'manifest.webmanifest';
-const baseNoSlash = import.meta.env.BASE_URL.replace(/\/+$/, '');
-const pagePath = Astro.url.pathname.replace(/\/+$/, '');
-const isHome = pagePath === baseNoSlash || pagePath === '';
+const { locale, page, enPath } = Astro.props;
+const t = getContent(locale);
+const meta = t.meta[page] ?? t.meta.home;
+
+const origin = (Astro.site ?? site.url).toString().replace(/\/+$/, '');
+const { en: enUrl, no: noUrl } = langUrls(origin, enPath);
+const canonical = locale === 'en' ? enUrl : noUrl;
+const ogImage = absUrl(origin, '/og-image.jpg');
+const faviconHref = withBase('/favicon.svg');
+const manifestHref = withBase('/manifest.webmanifest');
+const isHome = enPath === '/';
+
+const offers = [
+  { slug: 'exterior-care', price: '1190' },
+  { slug: 'interior-deep-clean', price: '2490' },
+  { slug: 'full-detail', price: '3490' },
+  { slug: 'ceramic-coating', price: '7990' },
+];
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'AutoWash',
+  name: site.name,
+  url: canonical,
+  telephone: site.phone.display,
+  email: site.email,
+  image: ogImage,
+  priceRange: 'NOK',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: '0484',
+    addressLocality: 'Oslo',
+    addressCountry: 'NO',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '08:00',
+      closes: '17:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '10:00',
+      closes: '14:00',
+    },
+  ],
+  areaServed: { '@type': 'City', name: 'Oslo' },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Treatments',
+    itemListElement: offers.map((o) => {
+      const s = t.services.find((x) => x.slug === o.slug);
+      return {
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: s?.name ?? o.slug },
+        price: o.price,
+        priceCurrency: 'NOK',
+      };
+    }),
+  },
+});
 ---
 
 <!doctype html>
-<html lang="no">
+<html lang={t.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="no" href={noUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={meta.title} />
+    <meta property="og:description" content={meta.description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:locale" content="nb_NO" />
+    <meta property="og:locale" content={locale === 'en' ? 'en_GB' : 'nb_NO'} />
+    <meta property="og:locale:alternate" content={locale === 'en' ? 'nb_NO' : 'en_GB'} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#1e1c18" />
+    <meta name="theme-color" content="#1b1916" />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
     <link rel="manifest" href={manifestHref} />
-    {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
+    <script type="application/ld+json" is:inline set:html={jsonLd} />
   </head>
   <body>
     <a
       href="#main"
       class="sr-only z-[60] bg-copper px-4 py-2 text-sm font-semibold text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
     >
-      Hopp til innhold
+      {t.ui.skip}
     </a>
-    <Header home={isHome} />
+    <Header locale={locale} home={isHome} />
     <main id="main" class:list={isHome ? '' : 'pt-16'}>
       <slot />
     </main>
-    <Footer />
-    <StickyCta />
+    <Footer locale={locale} />
+    <StickyCta locale={locale} />
 
     <script>
       // Diskré åpenbaring ved scrolling — ren CSS, respekterer reduced-motion.

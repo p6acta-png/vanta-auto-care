@@ -1,16 +1,24 @@
 ---
 import { withBase } from '../utils/links';
-import { services, site } from '../data/site';
+import { site } from '../data/site';
+import { type Locale, toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
 import { MapPin, Phone, Mail } from '@lucide/astro';
 
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
 const year = new Date().getFullYear();
-const serviceLinks = services.slice(0, 6);
+const serviceLinks = t.services.slice(0, 6);
 ---
 
 <footer class="bg-ink text-paper">
   <div class="wrap grid gap-12 py-16 sm:py-20 lg:grid-cols-12">
     <div class="lg:col-span-4">
-      <a href={withBase("/")} class="flex flex-col leading-none" aria-label="{site.name} — hjem">
+      <a href={withBase(toLocalePath(locale, '/'))} class="flex flex-col leading-none" aria-label="{site.name} — home">
         <span class="font-display text-3xl font-semibold tracking-[0.09em] text-paper">
           VANTA<span class="text-copper">.</span>
         </span>
@@ -18,20 +26,17 @@ const serviceLinks = services.slice(0, 6);
           Auto&nbsp;Care
         </span>
       </a>
-      <p class="mt-6 max-w-xs text-sm leading-relaxed text-paper/60">
-        Uavhengig bilpleieverksted i Oslo. Vask, rens, polering og beskyttelse —
-        utført for hånd, til en pris du kjenner på forhånd.
-      </p>
+      <p class="mt-6 max-w-xs text-sm leading-relaxed text-paper/60">{t.footer.tagline}</p>
     </div>
 
-    <nav class="lg:col-span-2" aria-label="Tjenester">
-      <h2 class="micro micro--dark mb-4">Tjenester</h2>
+    <nav class="lg:col-span-2" aria-label={t.footer.navTitle}>
+      <h2 class="micro micro--dark mb-4">{t.footer.navTitle}</h2>
       <ul class="space-y-2 text-sm">
         {
           serviceLinks.map((s) => (
             <li>
               <a
-                href={`/tjenester#${s.slug}`}
+                href={withBase(toLocalePath(locale, '/services') + `#${s.slug}`)}
                 class="text-paper/65 transition-colors hover:text-copper"
               >
                 {s.name}
@@ -43,7 +48,7 @@ const serviceLinks = services.slice(0, 6);
     </nav>
 
     <div class="lg:col-span-3">
-      <h2 class="micro micro--dark mb-4">Kontakt</h2>
+      <h2 class="micro micro--dark mb-4">{t.footer.contactTitle}</h2>
       <address class="space-y-2.5 text-sm not-italic text-paper/65">
         <p class="flex items-start gap-2">
           <MapPin class="mt-0.5 h-4 w-4 shrink-0 text-copper" aria-hidden="true" />
@@ -69,10 +74,10 @@ const serviceLinks = services.slice(0, 6);
     </div>
 
     <div class="lg:col-span-3">
-      <h2 class="micro micro--dark mb-4">Åpningstider</h2>
+      <h2 class="micro micro--dark mb-4">{t.footer.hoursTitle}</h2>
       <ul class="space-y-2 text-sm text-paper/65">
         {
-          site.hours.map((h) => (
+          t.hours.map((h) => (
             <li class="flex justify-between gap-4 border-b border-paper/10 pb-2">
               <span>{h.label}</span>
               <span class="text-right tabular">{h.value}</span>
@@ -85,8 +90,15 @@ const serviceLinks = services.slice(0, 6);
 
   <div class="rule-dark">
     <div class="wrap flex flex-col gap-2 py-5 text-[11px] uppercase tracking-[0.12em] text-paper/40 sm:flex-row sm:items-center sm:justify-between">
-      <p>© {year} {site.name} · {site.demoNotice}</p>
-      <p>Eksempelfoto: Unsplash · Wikimedia Commons (CC BY / CC BY-SA)</p>
+      <p>© {year} {site.name} · {t.ui.demo}</p>
+      <p class="flex items-center gap-4">
+        <span>{t.footer.credits}</span>
+        <span class="flex items-baseline gap-1">
+          <a href={withBase('/')} class:list={['transition-colors hover:text-copper', locale === 'en' ? 'text-paper/80' : '']}>EN</a>
+          <span class="opacity-30" aria-hidden="true">/</span>
+          <a href={withBase('/no/')} class:list={['transition-colors hover:text-copper', locale === 'no' ? 'text-paper/80' : '']}>NO</a>
+        </span>
+      </p>
     </div>
   </div>
   <div class="h-20 md:hidden" aria-hidden="true"></div>

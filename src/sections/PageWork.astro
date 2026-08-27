@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { withBase } from '../utils/links';
+import { images } from '../data/images';
+import { type Locale , toLocalePath } from '../i18n';
+import { getContent } from '../i18n/content';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getContent(locale);
+---
+
+<Base locale={locale} page="work" enPath="/work">
+  <section class="wrap py-14 sm:py-20">
+    <p class="micro">{t.work.kicker}</p>
+    <h1 class="h-display mt-4 max-w-3xl">{t.work.title}</h1>
+    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-steel">{t.work.intro}</p>
+  </section>
+
+  <section class="wrap pb-20 sm:pb-28">
+    <div class="grid gap-x-6 gap-y-10 lg:grid-cols-12">
+      {
+        t.work.items.map((w) => (
+          <figure class={w.span}>
+            <div class="overflow-hidden">
+              <Image
+                src={images[w.image]}
+                widths={[640, 1024, 1600]}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 55vw"
+                alt={t.alt[w.image]}
+                class:list={['w-full object-cover', w.cls]}
+                loading="lazy"
+              />
+            </div>
+            <figcaption class="mt-3 flex items-baseline justify-between gap-4">
+              <span class="font-medium">{w.title}</span>
+              <span class="text-right text-xs text-steel">{w.note}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="mt-14 border-t border-line pt-8">
+      <p class="max-w-2xl text-sm leading-relaxed text-steel">{t.beforeAfter.note}</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href={withBase(toLocalePath(locale, '/book') + '#quote')} class="btn-primary">{t.ui.quote}</a>
+        <a href={withBase(toLocalePath(locale, '/book'))} class="btn-secondary">{t.ui.book}</a>
+      </div>
+    </div>
+  </section>
+</Base>
